@@ -1,0 +1,3 @@
+---
+systemd_internal_services:
+  systemd-networkd.service: true

@@ -3,3 +3,5 @@ fixtures:
   repositories:
     systemd: https://github.com/camptocamp/puppet-systemd.git
     stdlib: https://github.com/puppetlabs/puppetlabs-stdlib.git
+    ferm: https://github.com/voxpupuli/puppet-ferm.git
+    concat: https://github.com/puppetlabs/puppetlabs-concat.git
