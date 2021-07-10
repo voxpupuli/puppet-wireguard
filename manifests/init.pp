@@ -13,7 +13,7 @@ class wireguard (
   String[1] $package_name = 'wireguard-tools',
   Enum['installed', 'latest', 'absent'] $package_ensure = 'installed',
   Stdlib::Absolutepath $config_directory = '/etc/wireguard',
-){
+) {
   if $manage_package {
     package { 'wireguard-tools':
       ensure => 'installed',
@@ -26,9 +26,9 @@ class wireguard (
   }
   # created by the package, but with different permissions
   file { $config_directory:
-    ensure  => $_file_ensure,
-    owner   => 'root',
-    mode    => '0750',
-    group   => 'systemd-network',
+    ensure => $_file_ensure,
+    owner  => 'root',
+    mode   => '0750',
+    group  => 'systemd-network',
   }
 }
