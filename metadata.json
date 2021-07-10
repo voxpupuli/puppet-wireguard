@@ -1,0 +1,53 @@
+{
+  "name": "puppet-wireguard",
+  "version": "2.0.1-rc0",
+  "author": "Vox Pupuli",
+  "summary": "installs, configures, and manages wireguard",
+  "license": "AGPL-3.0",
+  "source": "https://github.com/voxpupuli/puppet-wireguard.git",
+  "project_page": "https://github.com/voxpupuli/puppet-wireguard",
+  "issues_url": "https://github.com/voxpupuli/puppet-wireguard/issues",
+  "description": "This is a nice module to manage wireguard backup jobs",
+  "tags": [
+    "wireguard",
+    "vpn",
+    "wg",
+    "systemd-networkd"
+  ],
+  "dependencies": [
+    {
+      "name": "camptocamp/systemd",
+      "version_requirement": ">= 3.0.0 < 4.0.0"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 7.1.0 < 8.0.0"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Archlinux"
+    },
+    {
+      "operatingsystem": "Gentoo"
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "20.04"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "11"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 6.1.0 < 8.0.0"
+    }
+  ]
+}
