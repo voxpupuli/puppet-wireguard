@@ -1,6 +1,7 @@
 # puppet-wireguard
 
 [![Build Status](https://github.com/voxpupuli/puppet-wireguard/workflows/CI/badge.svg)](https://github.com/voxpupuli/puppet-wireguard/actions?query=workflow%3ACI)
+[![Release](https://github.com/voxpupuli/puppet-wireguard/actions/workflows/release.yml/badge.svg)](https://github.com/voxpupuli/puppet-wireguard/actions/workflows/release.yml)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/wireguard.svg)](https://forge.puppetlabs.com/puppet/wireguard)
 [![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/wireguard.svg)](https://forge.puppetlabs.com/puppet/wireguard)
 [![Puppet Forge - endorsement](https://img.shields.io/puppetforge/e/puppet/wireguard.svg)](https://forge.puppetlabs.com/puppet/wireguard)
