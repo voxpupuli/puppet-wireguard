@@ -83,7 +83,7 @@ wireguard::interface {'as2273':
   source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
   public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
   endpoint         => 'wg.example.com:53668',
-  addresses       => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},]
+  addresses        => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},],
 }
 ```
 
@@ -147,7 +147,7 @@ Data type: `Optional[Array[Stdlib::IP::Address]]`
 
 array of addresses where the remote peer connects to (our local ips), used for firewalling
 
-Default value: `[$facts['networking']['ip'],$facts['networking']['ip6'],]`
+Default value: `[$facts['networking']['ip'], $facts['networking']['ip6'],]`
 
 ##### <a name="public_key"></a>`public_key`
 
