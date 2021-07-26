@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.6.0](https://github.com/voxpupuli/puppet-wireguard/tree/v0.6.0) (2021-07-30)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.5.0...v0.6.0)
+
+**Implemented enhancements:**
+
+- Implement PersistentKeepalive parameter [\#12](https://github.com/voxpupuli/puppet-wireguard/pull/12) ([bastelfreak](https://github.com/bastelfreak))
+- Make endpoint parameter optional [\#10](https://github.com/voxpupuli/puppet-wireguard/pull/10) ([bastelfreak](https://github.com/bastelfreak))
+- wireguard:interface: default `input_interface` to `networking.primary` fact [\#9](https://github.com/voxpupuli/puppet-wireguard/pull/9) ([bastelfreak](https://github.com/bastelfreak))
+
+**Fixed bugs:**
+
+- dont make `$destination_addresses` as optional, remove useless validation [\#11](https://github.com/voxpupuli/puppet-wireguard/pull/11) ([bastelfreak](https://github.com/bastelfreak))
+- puppet:wireguard: set default for `$source_addresses` to `[]` [\#8](https://github.com/voxpupuli/puppet-wireguard/pull/8) ([bastelfreak](https://github.com/bastelfreak))
+
+**Merged pull requests:**
+
+- switch from camptocamp/systemd to voxpupuli/systemd [\#6](https://github.com/voxpupuli/puppet-wireguard/pull/6) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v0.5.0](https://github.com/voxpupuli/puppet-wireguard/tree/v0.5.0) (2021-07-12)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/79faeed0d4d264d9b78b0f447e6c567b826f8ac9...v0.5.0)
