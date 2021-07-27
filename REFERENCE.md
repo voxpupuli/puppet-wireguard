@@ -135,11 +135,11 @@ Default value: `Integer(regsubst($title, '^\D+(\d+)$', '\1'))`
 
 ##### <a name="source_addresses"></a>`source_addresses`
 
-Data type: `Optional[Array[Stdlib::IP::Address]]`
+Data type: `Array[Stdlib::IP::Address]`
 
 an array of ip addresses from where we receive wireguard connections
 
-Default value: ``undef``
+Default value: `[]`
 
 ##### <a name="destination_addresses"></a>`destination_addresses`
 
