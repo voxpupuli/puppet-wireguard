@@ -33,7 +33,7 @@
 define wireguard::interface (
   String[1] $public_key,
   String[1] $endpoint,
-  Optional[Array[Stdlib::IP::Address]] $destination_addresses = [$facts['networking']['ip'], $facts['networking']['ip6'],],
+  Array[Stdlib::IP::Address] $destination_addresses = [$facts['networking']['ip'], $facts['networking']['ip6'],],
   String[1] $interface = $title,
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
   Optional[String[1]] $input_interface = undef,
@@ -44,8 +44,6 @@ define wireguard::interface (
   require wireguard
 
   if $manage_firewall {
-    assert_type(Array[Stdlib::IP::Address], $source_addresses)
-    assert_type(Array[Stdlib::IP::Address], $destination_addresses)
     ferm::rule { "allow_wg_${interface}":
       action    => 'ACCEPT',
       chain     => 'INPUT',
