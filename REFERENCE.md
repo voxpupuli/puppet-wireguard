@@ -85,6 +85,14 @@ wireguard::interface {'as2273':
   endpoint         => 'wg.example.com:53668',
   addresses        => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},],
 }
+
+Create a passive wireguard interface that listens for incoming connections. Useful when the other side has a dynamic IP / is behind NAT
+wireguard::interface {'as2273':
+  source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
+  public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
+  dport            => 53668,
+  addresses        => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},],
+}
 ```
 
 #### Parameters
@@ -143,7 +151,7 @@ Default value: `[]`
 
 ##### <a name="destination_addresses"></a>`destination_addresses`
 
-Data type: `Optional[Array[Stdlib::IP::Address]]`
+Data type: `Array[Stdlib::IP::Address]`
 
 array of addresses where the remote peer connects to (our local ips), used for firewalling
 
@@ -157,9 +165,11 @@ base64 encoded pubkey from the remote peer
 
 ##### <a name="endpoint"></a>`endpoint`
 
-Data type: `String[1]`
+Data type: `Optional[String[1]]`
 
 fqdn:port or ip:port where we connect to
+
+Default value: ``undef``
 
 ##### <a name="addresses"></a>`addresses`
 

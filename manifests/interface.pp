@@ -30,9 +30,16 @@
 #    addresses        => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},],
 #  }
 #
+#  Create a passive wireguard interface that listens for incoming connections. Useful when the other side has a dynamic IP / is behind NAT
+#  wireguard::interface {'as2273':
+#    source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
+#    public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
+#    dport            => 53668,
+#    addresses        => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},],
+#  }
 define wireguard::interface (
   String[1] $public_key,
-  String[1] $endpoint,
+  Optional[String[1]] $endpoint = undef,
   Array[Stdlib::IP::Address] $destination_addresses = [$facts['networking']['ip'], $facts['networking']['ip6'],],
   String[1] $interface = $title,
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
@@ -76,28 +83,29 @@ define wireguard::interface (
     require => Exec["generate ${interface} keys"],
   }
   # lint:ignore:strict_indent
-  $netdev_config = @("EOT")
+  $netdev_config = @(EOT)
+  <%- | $interface, $dport, $public_key, $endpoint | -%>
   # THIS FILE IS MANAGED BY PUPPET
   # based on https://dn42.dev/howto/wireguard
   [NetDev]
-  Name=${interface}
+  Name=<%= $interface %>
   Kind=wireguard
 
   [WireGuard]
-  PrivateKeyFile=/etc/wireguard/${interface}
-  ListenPort=${dport}
+  PrivateKeyFile=/etc/wireguard/<%= $interface %>
+  ListenPort=<%= $dport %>
 
   [WireGuardPeer]
-  PublicKey=${public_key}
-  # OPTIONAL, pre-shared key
-  #PresharedKey=<pre-shared key>
-  Endpoint=${endpoint}
+  PublicKey=<%= $public_key %>
+  <% if $endpoint { -%>
+  Endpoint=<%= $endpoint %>
+  <%} -%>
   AllowedIPs=fe80::/64
   AllowedIPs=fd00::/8
   AllowedIPs=0.0.0.0/0
   | EOT
   systemd::network { "${interface}.netdev":
-    content         => $netdev_config,
+    content         => inline_epp($netdev_config, { 'interface' => $interface, 'dport' => $dport, 'public_key' => $public_key, 'endpoint' => $endpoint }),
     restart_service => true,
     owner           => 'root',
     group           => 'systemd-network',
