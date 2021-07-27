@@ -36,7 +36,7 @@ define wireguard::interface (
   Optional[Array[Stdlib::IP::Address]] $destination_addresses = [$facts['networking']['ip'], $facts['networking']['ip6'],],
   String[1] $interface = $title,
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
-  Optional[String[1]] $input_interface = undef,
+  String[1] $input_interface = $facts['networking']['primary'],
   Boolean $manage_firewall = true,
   Array[Stdlib::IP::Address] $source_addresses = [],
   Array[Hash[String,Variant[Stdlib::IP::Address::V4::CIDR,Stdlib::IP::Address::V6::CIDR]]] $addresses = [],

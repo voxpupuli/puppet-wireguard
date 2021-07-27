@@ -111,11 +111,11 @@ Default value: `$title`
 
 ##### <a name="input_interface"></a>`input_interface`
 
-Data type: `Optional[String[1]]`
+Data type: `String[1]`
 
 ethernet interface where the wireguard packages will enter the system, used for firewall rules
 
-Default value: ``undef``
+Default value: `$facts['networking']['primary']`
 
 ##### <a name="manage_firewall"></a>`manage_firewall`
 
