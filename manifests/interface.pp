@@ -10,8 +10,11 @@
 # @param public_key base64 encoded pubkey from the remote peer
 # @param endpoint fqdn:port or ip:port where we connect to
 # @param addresses different addresses for the systemd-networkd configuration
+# @param persistent_keepalive is set to 1 or greater, that's the interval in seconds wireguard sends a keepalive to the other peer(s). Useful if the sender is behind a NAT gateway or has a dynamic ip address
 #
 # @author Tim Meusel <tim@bastelfreak.de>
+#
+# @see https://www.freedesktop.org/software/systemd/man/systemd.netdev.html#%5BWireGuardPeer%5D%20Section%20Options
 #
 # @example
 #  Peer with one node and setup dualstack firewall rules
@@ -40,6 +43,7 @@
 define wireguard::interface (
   String[1] $public_key,
   Optional[String[1]] $endpoint = undef,
+  Integer[0, 65535] $persistent_keepalive = 0,
   Array[Stdlib::IP::Address] $destination_addresses = [$facts['networking']['ip'], $facts['networking']['ip6'],],
   String[1] $interface = $title,
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
@@ -100,6 +104,7 @@ define wireguard::interface (
   <% if $endpoint { -%>
   Endpoint=<%= $endpoint %>
   <%} -%>
+  PersistentKeepalive=<%= $persistent_keepalive %>
   AllowedIPs=fe80::/64
   AllowedIPs=fd00::/8
   AllowedIPs=0.0.0.0/0
