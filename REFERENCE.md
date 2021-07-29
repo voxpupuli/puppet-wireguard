@@ -65,6 +65,9 @@ Default value: `'/etc/wireguard'`
 
 manages a wireguard setup
 
+* **See also**
+  * https://www.freedesktop.org/software/systemd/man/systemd.netdev.html#%5BWireGuardPeer%5D%20Section%20Options
+
 #### Examples
 
 ##### 
@@ -108,6 +111,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`public_key`](#public_key)
 * [`endpoint`](#endpoint)
 * [`addresses`](#addresses)
+* [`persistent_keepalive`](#persistent_keepalive)
 
 ##### <a name="interface"></a>`interface`
 
@@ -178,4 +182,12 @@ Data type: `Array[Hash[String,Variant[Stdlib::IP::Address::V4::CIDR,Stdlib::IP::
 different addresses for the systemd-networkd configuration
 
 Default value: `[]`
+
+##### <a name="persistent_keepalive"></a>`persistent_keepalive`
+
+Data type: `Integer[0, 65535]`
+
+is set to 1 or greater, that's the interval in seconds wireguard sends a keepalive to the other peer(s). Useful if the sender is behind a NAT gateway or has a dynamic ip address
+
+Default value: `0`
 
