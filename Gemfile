@@ -1,10 +1,14 @@
+# Managed by modulesync - DO NOT EDIT
+# https://voxpupuli.org/docs/updating-files-managed-with-modulesync/
+
 source ENV['GEM_SOURCE'] || "https://rubygems.org"
 
 group :test do
-  gem 'voxpupuli-test', '~> 2.1',  :require => false
-  gem 'coveralls',                 :require => false
-  gem 'simplecov-console',         :require => false
-  gem 'puppet-lint-param-docs',    :require => false
+  gem 'voxpupuli-test', '~> 2.1',     :require => false
+  gem 'coveralls',                    :require => false
+  gem 'simplecov-console',            :require => false
+  gem 'puppet_metadata', '~> 0.3.0',  :require => false
+  gem 'puppet-lint-param-docs',       :require => false
 end
 
 group :development do
@@ -13,8 +17,7 @@ group :development do
 end
 
 group :system_tests do
-  gem 'puppet_metadata', '~> 0.3.0',  :require => false
-  gem 'voxpupuli-acceptance',         :require => false
+  gem 'voxpupuli-acceptance', '~> 1.0',  :require => false
 end
 
 group :release do
@@ -24,7 +27,6 @@ group :release do
   gem 'puppet-strings', '>= 2.2',                 :require => false
 end
 
-gem 'puppetlabs_spec_helper', '>= 2', '< 4', :require => false
 gem 'rake', :require => false
 gem 'facter', ENV['FACTER_GEM_VERSION'], :require => false, :groups => [:test]
 
