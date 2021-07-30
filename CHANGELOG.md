@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.6.1](https://github.com/voxpupuli/puppet-wireguard/tree/v0.6.1) (2021-07-30)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.6.0...v0.6.1)
+
+the 0.6.0 release wasn't successful because the CI pipeline failed. 0.6.1 contains the same Puppet code + a fixed Gemfile
+
+
+
 ## [v0.6.0](https://github.com/voxpupuli/puppet-wireguard/tree/v0.6.0) (2021-07-30)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.5.0...v0.6.0)
