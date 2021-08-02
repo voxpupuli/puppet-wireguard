@@ -55,6 +55,10 @@ define wireguard::interface (
   require wireguard
 
   if $manage_firewall {
+    $daddr = empty($destination_addresses) ? {
+      true    => undef,
+      default => $destination_addresses,
+    }
     ferm::rule { "allow_wg_${interface}":
       action    => 'ACCEPT',
       chain     => 'INPUT',
@@ -62,7 +66,7 @@ define wireguard::interface (
       dport     => $dport,
       interface => $input_interface,
       saddr     => $source_addresses,
-      daddr     => $destination_addresses,
+      daddr     => $daddr,
       notify    => Service['systemd-networkd'],
     }
   }
