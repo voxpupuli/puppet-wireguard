@@ -96,6 +96,28 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=fe80::ade1/64}) }
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
+      context 'with empty destintion_addresses' do
+        let :pre_condition do
+          'class{"ferm":
+          configfile => "/etc/ferm.conf",
+          configdirectory => "/etc/ferm.d/"
+          }
+          class {"systemd":
+            manage_networkd => true
+          }'
+        end
+        let :params do
+          {
+            public_key: 'blabla==',
+            endpoint: 'wireguard.example.com:1234',
+            manage_firewall: true,
+            destination_addresses: [],
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_ferm__rule("allow_wg_#{title}").without_daddr }
+      end
     end
   end
 end
