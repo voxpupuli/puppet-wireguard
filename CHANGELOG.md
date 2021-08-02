@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.6.2](https://github.com/voxpupuli/puppet-wireguard/tree/v0.6.2) (2021-08-02)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.6.1...v0.6.2)
+
+**Fixed bugs:**
+
+- Make filtering on dest addr optional [\#16](https://github.com/voxpupuli/puppet-wireguard/pull/16) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v0.6.1](https://github.com/voxpupuli/puppet-wireguard/tree/v0.6.1) (2021-07-30)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.6.0...v0.6.1)
