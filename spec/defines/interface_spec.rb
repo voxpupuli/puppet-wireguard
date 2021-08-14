@@ -36,6 +36,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{ListenPort=1234}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{Endpoint=#{params[:endpoint]}}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Address}) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Description}) }
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
       context 'with required params and with firewall rules' do
@@ -117,6 +118,22 @@ describe 'wireguard::interface', type: :define do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_ferm__rule("allow_wg_#{title}").without_daddr }
+      end
+      context 'with description' do
+        let :params do
+          {
+            public_key: 'blabla==',
+            endpoint: 'wireguard.example.com:1234',
+            manage_firewall: false,
+            description: 'bla',
+            # we need to set destination_addresses to overwrite the default
+            # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
+            destination_addresses: [facts[:networking]['ip'],],
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{Description=bla}) }
       end
     end
   end

@@ -11,6 +11,7 @@
 # @param endpoint fqdn:port or ip:port where we connect to
 # @param addresses different addresses for the systemd-networkd configuration
 # @param persistent_keepalive is set to 1 or greater, that's the interval in seconds wireguard sends a keepalive to the other peer(s). Useful if the sender is behind a NAT gateway or has a dynamic ip address
+# @param description an optional string that will be added to the wireguard network interface
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 #
@@ -51,6 +52,7 @@ define wireguard::interface (
   Boolean $manage_firewall = true,
   Array[Stdlib::IP::Address] $source_addresses = [],
   Array[Hash[String,Variant[Stdlib::IP::Address::V4::CIDR,Stdlib::IP::Address::V6::CIDR]]] $addresses = [],
+  Optional[String[1]] $description = undef,
 ) {
   require wireguard
 
@@ -92,12 +94,15 @@ define wireguard::interface (
   }
   # lint:ignore:strict_indent
   $netdev_config = @(EOT)
-  <%- | $interface, $dport, $public_key, $endpoint | -%>
+  <%- | $interface, $dport, $public_key, $endpoint, $description | -%>
   # THIS FILE IS MANAGED BY PUPPET
   # based on https://dn42.dev/howto/wireguard
   [NetDev]
   Name=<%= $interface %>
   Kind=wireguard
+  <% if $description { -%>
+  Description=<%= $description %>
+  <%} -%>
 
   [WireGuard]
   PrivateKeyFile=/etc/wireguard/<%= $interface %>
@@ -114,7 +119,7 @@ define wireguard::interface (
   AllowedIPs=0.0.0.0/0
   | EOT
   systemd::network { "${interface}.netdev":
-    content         => inline_epp($netdev_config, { 'interface' => $interface, 'dport' => $dport, 'public_key' => $public_key, 'endpoint' => $endpoint }),
+    content         => inline_epp($netdev_config, { 'interface' => $interface, 'dport' => $dport, 'public_key' => $public_key, 'endpoint' => $endpoint, 'description' => $description }),
     restart_service => true,
     owner           => 'root',
     group           => 'systemd-network',
