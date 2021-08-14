@@ -112,6 +112,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`endpoint`](#endpoint)
 * [`addresses`](#addresses)
 * [`persistent_keepalive`](#persistent_keepalive)
+* [`description`](#description)
 
 ##### <a name="interface"></a>`interface`
 
@@ -190,4 +191,12 @@ Data type: `Integer[0, 65535]`
 is set to 1 or greater, that's the interval in seconds wireguard sends a keepalive to the other peer(s). Useful if the sender is behind a NAT gateway or has a dynamic ip address
 
 Default value: `0`
+
+##### <a name="description"></a>`description`
+
+Data type: `Optional[String[1]]`
+
+an optional string that will be added to the wireguard network interface
+
+Default value: ``undef``
 
