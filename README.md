@@ -35,6 +35,19 @@ IPv6 addresses will be automatically set to the `destination_addresses` array
 from the `wireguard::interface` defined resource. If you don't have dualstack
 you need to overwrite the parameter.
 
+There is a structured fact called `wireguard_pubkeys` which is a hash with each
+filename without the `.pub` and the content (the public key):
+
+```
+# facter -p wireguard_pubkeys
+{
+  as1234 => "40mH10BbolserhidsruhieudrstlJBB7fxvoPlU=",
+  as5678 => "Tci/bHoPColserjfoisehrjioesurrhGpEN+NDueNjUvBA=",
+  asblub => "M7lTopd2koserhioesrhiouwerhpcvqSWEviI=",
+  notebook => "sK9Ld+p1eH4id+BAuM6lserheoishriouwKhgwFf/HRw=",
+  lan => "dIXj6QcWGBWTzq0pwoerjow4eroiwe4jr4CGkXUID3J8rO2k="
+}
+```
 ## Example configurations
 
 configure a tunnel with the name as9876.
