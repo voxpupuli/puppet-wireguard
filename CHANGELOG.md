@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.7.0](https://github.com/voxpupuli/puppet-wireguard/tree/v0.7.0) (2021-08-19)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.6.2...v0.7.0)
+
+**Implemented enhancements:**
+
+- add option to purge unknown wg keys [\#21](https://github.com/voxpupuli/puppet-wireguard/pull/21) ([bastelfreak](https://github.com/bastelfreak))
+- Add fact to export public keys [\#19](https://github.com/voxpupuli/puppet-wireguard/pull/19) ([bastelfreak](https://github.com/bastelfreak))
+- Implement description attribute for network interface [\#18](https://github.com/voxpupuli/puppet-wireguard/pull/18) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v0.6.2](https://github.com/voxpupuli/puppet-wireguard/tree/v0.6.2) (2021-08-02)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.6.1...v0.6.2)
