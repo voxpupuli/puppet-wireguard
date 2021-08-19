@@ -26,6 +26,7 @@ The following parameters are available in the `wireguard` class:
 * [`package_name`](#package_name)
 * [`package_ensure`](#package_ensure)
 * [`config_directory`](#config_directory)
+* [`purge_unknown_keys`](#purge_unknown_keys)
 
 ##### <a name="manage_package"></a>`manage_package`
 
@@ -58,6 +59,14 @@ Data type: `Stdlib::Absolutepath`
 the path to the wireguard directory
 
 Default value: `'/etc/wireguard'`
+
+##### <a name="purge_unknown_keys"></a>`purge_unknown_keys`
+
+Data type: `Boolean`
+
+by default Puppet will purge unknown wireguard keys from `$config_directory`
+
+Default value: ``true``
 
 ## Defined types
 

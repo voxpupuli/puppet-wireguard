@@ -5,6 +5,7 @@
 # @param package_name the name of the package
 # @param package_ensure the ensure state of the package
 # @param config_directory the path to the wireguard directory
+# @param purge_unknown_keys by default Puppet will purge unknown wireguard keys from `$config_directory`
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 #
@@ -13,6 +14,7 @@ class wireguard (
   String[1] $package_name = 'wireguard-tools',
   Enum['installed', 'latest', 'absent'] $package_ensure = 'installed',
   Stdlib::Absolutepath $config_directory = '/etc/wireguard',
+  Boolean $purge_unknown_keys = true,
 ) {
   if $manage_package {
     package { 'wireguard-tools':
@@ -24,11 +26,17 @@ class wireguard (
     'absent' => 'absent',
     default  => 'directory',
   }
+  if $purge_unknown_keys {
+    $options = { recurse => true, purge => true }
+  } else {
+    $options = undef
+  }
   # created by the package, but with different permissions
   file { $config_directory:
     ensure => $_file_ensure,
     owner  => 'root',
     mode   => '0750',
     group  => 'systemd-network',
+    *      => $options,
   }
 }
