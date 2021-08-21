@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.8.0](https://github.com/voxpupuli/puppet-wireguard/tree/v0.8.0) (2021-08-21)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.7.0...v0.8.0)
+
+**Implemented enhancements:**
+
+- Implement `mtu` param to configure MTUBytes [\#23](https://github.com/voxpupuli/puppet-wireguard/pull/23) ([bastelfreak](https://github.com/bastelfreak))
+
+**Fixed bugs:**
+
+- fact: support keyfiles with multiple dots [\#24](https://github.com/voxpupuli/puppet-wireguard/pull/24) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v0.7.0](https://github.com/voxpupuli/puppet-wireguard/tree/v0.7.0) (2021-08-19)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.6.2...v0.7.0)
