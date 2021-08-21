@@ -72,39 +72,59 @@ Default value: ``true``
 
 ### <a name="wireguardinterface"></a>`wireguard::interface`
 
-manages a wireguard setup
+}
 
 * **See also**
   * https://www.freedesktop.org/software/systemd/man/systemd.netdev.html#%5BWireGuardPeer%5D%20Section%20Options
 
 #### Examples
 
-##### 
+##### Peer with one node and setup dualstack firewall rules
 
 ```puppet
-Peer with one node and setup dualstack firewall rules
 wireguard::interface {'as2273':
   source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
   public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
   endpoint         => 'wg.example.com:53668',
   addresses        => [{'Address' => '192.168.123.6/30',},{'Address' => 'fe80::beef:1/64'},],
 }
+```
 
-Peer with one node and setup dualstack firewall rules with peers in a different layer2
+##### Peer with one node and setup dualstack firewall rules with peers in a different layer2
+
+```puppet
 wireguard::interface {'as2273':
   source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
   public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
   endpoint         => 'wg.example.com:53668',
   addresses        => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},],
 }
+```
 
-Create a passive wireguard interface that listens for incoming connections. Useful when the other side has a dynamic IP / is behind NAT
+##### Create a passive wireguard interface that listens for incoming connections. Useful when the other side has a dynamic IP / is behind NAT
+
+```puppet
 wireguard::interface {'as2273':
   source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
   public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
   dport            => 53668,
   addresses        => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},],
 }
+```
+
+##### create a wireguard interface behind a DSL line with changing IP with lowered MTU
+
+```puppet
+wireguard::interface {'as3668-2':
+  source_addresses      => ['144.76.249.220', '2a01:4f8:171:1152::12'],
+  public_key            => 'Tci/bHoPCjTpYv8bw17xQ7P4OdqzGpEN+NDueNjUvBA=',
+  endpoint              => 'router02.bastelfreak.org:1338',
+  dport                 => 1338,
+  input_interface       => $facts['networking']['primary'],
+  addresses             => [{'Address' => '169.254.0.10/32', 'Peer' =>'169.254.0.9/32'},{'Address' => 'fe80::beef:f/64'},],
+  destination_addresses => [],
+  persistent_keepalive  => 5,
+  mtu                   => 1412,
 ```
 
 #### Parameters
@@ -122,6 +142,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`addresses`](#addresses)
 * [`persistent_keepalive`](#persistent_keepalive)
 * [`description`](#description)
+* [`mtu`](#mtu)
 
 ##### <a name="interface"></a>`interface`
 
@@ -206,6 +227,14 @@ Default value: `0`
 Data type: `Optional[String[1]]`
 
 an optional string that will be added to the wireguard network interface
+
+Default value: ``undef``
+
+##### <a name="mtu"></a>`mtu`
+
+Data type: `Optional[Integer[1280, 9000]]`
+
+configure the MTU (maximum transision unit) for the wireguard tunnel. By default linux will figure this out. You might need to lower it if you're connection through a DSL line. MTU needs to be equal on both tunnel endpoints
 
 Default value: ``undef``
 
