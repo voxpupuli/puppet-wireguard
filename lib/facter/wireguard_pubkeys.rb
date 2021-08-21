@@ -5,7 +5,7 @@ Facter.add(:wireguard_pubkeys) do
   setcode do
     hash = {}
     Dir.glob('/etc/wireguard/*.pub').each do |file|
-      filename = file.split('/')[3].split('.')[0]
+      filename = file.split('/').last.gsub('.pub', '')
       content = File.read(file)
       hash[filename] = content.chomp
     end
