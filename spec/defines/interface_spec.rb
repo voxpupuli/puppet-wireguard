@@ -37,6 +37,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{Endpoint=#{params[:endpoint]}}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Address}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Description}) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{MTUBytes}) }
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
       context 'with required params and with firewall rules' do
@@ -134,6 +135,52 @@ describe 'wireguard::interface', type: :define do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{Description=bla}) }
+      end
+      context 'with MTU' do
+        let :params do
+          {
+            public_key: 'blabla==',
+            endpoint: 'wireguard.example.com:1234',
+            manage_firewall: false,
+            mtu: 9000,
+            # we need to set destination_addresses to overwrite the default
+            # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
+            destination_addresses: [facts[:networking]['ip'],],
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{MTUBytes=9000}) }
+      end
+      context 'with too high MTU' do
+        let :params do
+          {
+            public_key: 'blabla==',
+            endpoint: 'wireguard.example.com:1234',
+            manage_firewall: false,
+            mtu: 9001,
+            # we need to set destination_addresses to overwrite the default
+            # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
+            destination_addresses: [facts[:networking]['ip'],],
+          }
+        end
+
+        it { is_expected.not_to compile.with_all_deps }
+      end
+      context 'with MTU as string' do
+        let :params do
+          {
+            public_key: 'blabla==',
+            endpoint: 'wireguard.example.com:1234',
+            manage_firewall: false,
+            mtu: '9000',
+            # we need to set destination_addresses to overwrite the default
+            # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
+            destination_addresses: [facts[:networking]['ip'],],
+          }
+        end
+
+        it { is_expected.not_to compile.with_all_deps }
       end
     end
   end

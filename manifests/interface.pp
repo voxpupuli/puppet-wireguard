@@ -12,13 +12,13 @@
 # @param addresses different addresses for the systemd-networkd configuration
 # @param persistent_keepalive is set to 1 or greater, that's the interval in seconds wireguard sends a keepalive to the other peer(s). Useful if the sender is behind a NAT gateway or has a dynamic ip address
 # @param description an optional string that will be added to the wireguard network interface
+# @param mtu configure the MTU (maximum transision unit) for the wireguard tunnel. By default linux will figure this out. You might need to lower it if you're connection through a DSL line. MTU needs to be equal on both tunnel endpoints
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 #
 # @see https://www.freedesktop.org/software/systemd/man/systemd.netdev.html#%5BWireGuardPeer%5D%20Section%20Options
 #
-# @example
-#  Peer with one node and setup dualstack firewall rules
+# @example Peer with one node and setup dualstack firewall rules
 #  wireguard::interface {'as2273':
 #    source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
 #    public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
@@ -26,7 +26,7 @@
 #    addresses        => [{'Address' => '192.168.123.6/30',},{'Address' => 'fe80::beef:1/64'},],
 #  }
 #
-#  Peer with one node and setup dualstack firewall rules with peers in a different layer2
+# @example Peer with one node and setup dualstack firewall rules with peers in a different layer2
 #  wireguard::interface {'as2273':
 #    source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
 #    public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
@@ -34,13 +34,27 @@
 #    addresses        => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},],
 #  }
 #
-#  Create a passive wireguard interface that listens for incoming connections. Useful when the other side has a dynamic IP / is behind NAT
+# @example Create a passive wireguard interface that listens for incoming connections. Useful when the other side has a dynamic IP / is behind NAT
 #  wireguard::interface {'as2273':
 #    source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
 #    public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
 #    dport            => 53668,
 #    addresses        => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},],
 #  }
+#
+# @example create a wireguard interface behind a DSL line with changing IP with lowered MTU
+#  wireguard::interface {'as3668-2':
+#    source_addresses      => ['144.76.249.220', '2a01:4f8:171:1152::12'],
+#    public_key            => 'Tci/bHoPCjTpYv8bw17xQ7P4OdqzGpEN+NDueNjUvBA=',
+#    endpoint              => 'router02.bastelfreak.org:1338',
+#    dport                 => 1338,
+#    input_interface       => $facts['networking']['primary'],
+#    addresses             => [{'Address' => '169.254.0.10/32', 'Peer' =>'169.254.0.9/32'},{'Address' => 'fe80::beef:f/64'},],
+#    destination_addresses => [],
+#    persistent_keepalive  => 5,
+#    mtu                   => 1412,
+# }
+#
 define wireguard::interface (
   String[1] $public_key,
   Optional[String[1]] $endpoint = undef,
@@ -53,6 +67,7 @@ define wireguard::interface (
   Array[Stdlib::IP::Address] $source_addresses = [],
   Array[Hash[String,Variant[Stdlib::IP::Address::V4::CIDR,Stdlib::IP::Address::V6::CIDR]]] $addresses = [],
   Optional[String[1]] $description = undef,
+  Optional[Integer[1280, 9000]] $mtu = undef,
 ) {
   require wireguard
 
@@ -94,7 +109,7 @@ define wireguard::interface (
   }
   # lint:ignore:strict_indent
   $netdev_config = @(EOT)
-  <%- | $interface, $dport, $public_key, $endpoint, $description | -%>
+  <%- | $interface, $dport, $public_key, $endpoint, $description, $mtu | -%>
   # THIS FILE IS MANAGED BY PUPPET
   # based on https://dn42.dev/howto/wireguard
   [NetDev]
@@ -102,6 +117,9 @@ define wireguard::interface (
   Kind=wireguard
   <% if $description { -%>
   Description=<%= $description %>
+  <%} -%>
+  <% if $mtu { -%>
+  MTUBytes=<%= $mtu %>
   <%} -%>
 
   [WireGuard]
@@ -119,7 +137,7 @@ define wireguard::interface (
   AllowedIPs=0.0.0.0/0
   | EOT
   systemd::network { "${interface}.netdev":
-    content         => inline_epp($netdev_config, { 'interface' => $interface, 'dport' => $dport, 'public_key' => $public_key, 'endpoint' => $endpoint, 'description' => $description }),
+    content         => inline_epp($netdev_config, { 'interface' => $interface, 'dport' => $dport, 'public_key' => $public_key, 'endpoint' => $endpoint, 'description' => $description, 'mtu' => $mtu }),
     restart_service => true,
     owner           => 'root',
     group           => 'systemd-network',
