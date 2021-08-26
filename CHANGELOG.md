@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.8.2](https://github.com/voxpupuli/puppet-wireguard/tree/v0.8.2) (2021-08-26)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.8.1...v0.8.2)
+
+the V0.8.1 release had an issue in the Rakefile which prevented the release. V0.8.2 fixes only this and is otherwise identical to the v0.8.1 release.
+
+**Fixed bugs:**
+
+- remove gettext workaround from Rakefile [\#28](https://github.com/voxpupuli/puppet-wireguard/pull/28) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v0.8.1](https://github.com/voxpupuli/puppet-wireguard/tree/v0.8.1) (2021-08-26)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.8.0...v0.8.1)
