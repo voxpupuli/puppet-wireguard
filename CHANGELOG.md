@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.8.1](https://github.com/voxpupuli/puppet-wireguard/tree/v0.8.1) (2021-08-26)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.8.0...v0.8.1)
+
+**Merged pull requests:**
+
+- Allow stdlib 8.0.0 [\#26](https://github.com/voxpupuli/puppet-wireguard/pull/26) ([smortex](https://github.com/smortex))
+
 ## [v0.8.0](https://github.com/voxpupuli/puppet-wireguard/tree/v0.8.0) (2021-08-21)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.7.0...v0.8.0)
