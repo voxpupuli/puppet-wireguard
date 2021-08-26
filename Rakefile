@@ -70,7 +70,4 @@ begin
 rescue LoadError
 end
 
-# workaround for `Current textdomain ("master_domain") was not added, use FastGettext.add_text_domain !`
-# https://tickets.puppetlabs.com/browse/MODULES-6598
-FastGettext.default_text_domain = 'default-text-domain'
 # vim: syntax=ruby
