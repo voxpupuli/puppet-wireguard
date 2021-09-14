@@ -12,6 +12,10 @@
 
 * [`wireguard::interface`](#wireguardinterface): manages a wireguard setup
 
+### Data types
+
+* [`Wireguard::Peers`](#wireguardpeers): custom data type for an array with wireguard peers
+
 ## Classes
 
 ### <a name="wireguard"></a>`wireguard`
@@ -127,6 +131,25 @@ wireguard::interface {'as3668-2':
   mtu                   => 1412,
 ```
 
+##### create a wireguard interface with multiple peers
+
+```puppet
+wireguard::interface { 'wg0':
+  dport     => 1338,
+  addresses => [{'Address' => '192.0.2.1/24'}],
+  peers     => [
+    {
+       public_key  => 'foo==',
+       allowed_ips => ['192.0.2.2'],
+    },
+    {
+       public_key  => 'bar==',
+       allowed_ips => ['192.0.2.3'],
+    }
+  ],
+}
+```
+
 #### Parameters
 
 The following parameters are available in the `wireguard::interface` defined type:
@@ -143,6 +166,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`persistent_keepalive`](#persistent_keepalive)
 * [`description`](#description)
 * [`mtu`](#mtu)
+* [`peers`](#peers)
 
 ##### <a name="interface"></a>`interface`
 
@@ -194,9 +218,11 @@ Default value: `[$facts['networking']['ip'], $facts['networking']['ip6'],]`
 
 ##### <a name="public_key"></a>`public_key`
 
-Data type: `String[1]`
+Data type: `Optional[String[1]]`
 
 base64 encoded pubkey from the remote peer
+
+Default value: ``undef``
 
 ##### <a name="endpoint"></a>`endpoint`
 
@@ -237,4 +263,32 @@ Data type: `Optional[Integer[1280, 9000]]`
 configure the MTU (maximum transision unit) for the wireguard tunnel. By default linux will figure this out. You might need to lower it if you're connection through a DSL line. MTU needs to be equal on both tunnel endpoints
 
 Default value: ``undef``
+
+##### <a name="peers"></a>`peers`
+
+Data type: `Wireguard::Peers`
+
+is an array of struct (Wireguard::Peers) for multiple peers
+
+Default value: `[]`
+
+## Data types
+
+### <a name="wireguardpeers"></a>`Wireguard::Peers`
+
+custom data type for an array with wireguard peers
+
+* **See also**
+  * https://www.freedesktop.org/software/systemd/man/systemd.netdev.html#%5BWireGuardPeer%5D%20Section%20Options
+
+Alias of
+
+```puppet
+Array[Struct[{
+    public_key           => String[1],
+    allowed_ips          => Optional[Array[String[1]]],
+    endpoint             => Optional[String[1]],
+    persistent_keepalive => Optional[Stdlib::Port],
+  }]]
+```
 

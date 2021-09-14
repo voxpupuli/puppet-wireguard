@@ -1,0 +1,17 @@
+# THIS FILE IS MANAGED BY PUPPET
+# based on https://dn42.dev/howto/wireguard
+[Match]
+Name=as1234
+
+[Network]
+DHCP=no
+IPv6AcceptRA=false
+IPForward=yes
+
+# for networkd >= 244 KeepConfiguration stops networkd from
+# removing routes on this interface when restarting
+KeepConfiguration=yes
+
+[Address]
+Address=192.0.2.1/24
+
