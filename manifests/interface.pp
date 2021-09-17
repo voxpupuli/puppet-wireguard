@@ -13,8 +13,10 @@
 # @param persistent_keepalive is set to 1 or greater, that's the interval in seconds wireguard sends a keepalive to the other peer(s). Useful if the sender is behind a NAT gateway or has a dynamic ip address
 # @param description an optional string that will be added to the wireguard network interface
 # @param mtu configure the MTU (maximum transision unit) for the wireguard tunnel. By default linux will figure this out. You might need to lower it if you're connection through a DSL line. MTU needs to be equal on both tunnel endpoints
+# @param peers is an array of struct (Wireguard::Peers) for multiple peers
 #
 # @author Tim Meusel <tim@bastelfreak.de>
+# @author Sebastian Rakel <sebastian@devunit.eu>
 #
 # @see https://www.freedesktop.org/software/systemd/man/systemd.netdev.html#%5BWireGuardPeer%5D%20Section%20Options
 #
@@ -55,8 +57,24 @@
 #    mtu                   => 1412,
 # }
 #
+# @example create a wireguard interface with multiple peers
+#  wireguard::interface { 'wg0':
+#    dport     => 1338,
+#    addresses => [{'Address' => '192.0.2.1/24'}],
+#    peers     => [
+#      {
+#         public_key  => 'foo==',
+#         allowed_ips => ['192.0.2.2'],
+#      },
+#      {
+#         public_key  => 'bar==',
+#         allowed_ips => ['192.0.2.3'],
+#      }
+#    ],
+#  }
+#
 define wireguard::interface (
-  String[1] $public_key,
+  Wireguard::Peers $peers = [],
   Optional[String[1]] $endpoint = undef,
   Integer[0, 65535] $persistent_keepalive = 0,
   Array[Stdlib::IP::Address] $destination_addresses = [$facts['networking']['ip'], $facts['networking']['ip6'],],
@@ -68,8 +86,13 @@ define wireguard::interface (
   Array[Hash[String,Variant[Stdlib::IP::Address::V4::CIDR,Stdlib::IP::Address::V6::CIDR]]] $addresses = [],
   Optional[String[1]] $description = undef,
   Optional[Integer[1280, 9000]] $mtu = undef,
+  Optional[String[1]] $public_key = undef,
 ) {
   require wireguard
+
+  if empty($peers) and !$public_key {
+    fail('peers or public_key have to been set')
+  }
 
   if $manage_firewall {
     $daddr = empty($destination_addresses) ? {
@@ -107,37 +130,24 @@ define wireguard::interface (
     mode    => '0600',
     require => Exec["generate ${interface} keys"],
   }
-  # lint:ignore:strict_indent
-  $netdev_config = @(EOT)
-  <%- | $interface, $dport, $public_key, $endpoint, $description, $mtu | -%>
-  # THIS FILE IS MANAGED BY PUPPET
-  # based on https://dn42.dev/howto/wireguard
-  [NetDev]
-  Name=<%= $interface %>
-  Kind=wireguard
-  <% if $description { -%>
-  Description=<%= $description %>
-  <%} -%>
-  <% if $mtu { -%>
-  MTUBytes=<%= $mtu %>
-  <%} -%>
 
-  [WireGuard]
-  PrivateKeyFile=/etc/wireguard/<%= $interface %>
-  ListenPort=<%= $dport %>
+  if $public_key {
+    $peer = [{
+        public_key => $public_key,
+        endpoint   => $endpoint,
+    }]
+  } else {
+    $peer = []
+  }
 
-  [WireGuardPeer]
-  PublicKey=<%= $public_key %>
-  <% if $endpoint { -%>
-  Endpoint=<%= $endpoint %>
-  <%} -%>
-  PersistentKeepalive=<%= $persistent_keepalive %>
-  AllowedIPs=fe80::/64
-  AllowedIPs=fd00::/8
-  AllowedIPs=0.0.0.0/0
-  | EOT
   systemd::network { "${interface}.netdev":
-    content         => inline_epp($netdev_config, { 'interface' => $interface, 'dport' => $dport, 'public_key' => $public_key, 'endpoint' => $endpoint, 'description' => $description, 'mtu' => $mtu }),
+    content         => epp("${module_name}/netdev.epp", {
+        'interface'   => $interface,
+        'dport'       => $dport,
+        'description' => $description,
+        'mtu'         => $mtu,
+        'peers'       => $peers + $peer,
+    }),
     restart_service => true,
     owner           => 'root',
     group           => 'systemd-network',
@@ -145,34 +155,8 @@ define wireguard::interface (
     require         => File["/etc/wireguard/${interface}"],
   }
 
-  $network_config = @(EOT)
-  <%- | $addresses, $interface | -%>
-  # THIS FILE IS MANAGED BY PUPPET
-  # based on https://dn42.dev/howto/wireguard
-  [Match]
-  Name=<%= $interface %>
-
-  [Network]
-  DHCP=no
-  IPv6AcceptRA=false
-  IPForward=yes
-
-  # for networkd >= 244 KeepConfiguration stops networkd from
-  # removing routes on this interface when restarting
-  KeepConfiguration=yes
-
-  <% $addresses.each |$address| { -%>
-  [Address]
-  <% $address.each |$key, $value| { -%>
-  <%= $key %>=<%= $value %>
-  <% } -%>
-
-  <% } -%>
-  | EOT
-  # lint:endignore:strict_indent
-
   systemd::network { "${interface}.network":
-    content         => inline_epp($network_config, { 'interface' => $interface, 'addresses' => $addresses }),
+    content         => epp("${module_name}/network.epp", { 'interface' => $interface, 'addresses' => $addresses }),
     restart_service => true,
     owner           => 'root',
     group           => 'systemd-network',
