@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Facter.add(:wireguard_pubkeys) do
   confine do
     File.directory?('/etc/wireguard/')

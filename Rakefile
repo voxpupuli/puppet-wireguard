@@ -69,5 +69,4 @@ begin
 
 rescue LoadError
 end
-
 # vim: syntax=ruby
