@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'wireguard::interface', type: :define do
   let(:title) { 'as1234' }
 
   on_supported_os.each do |os, facts|
-    context "on #{os} " do
+    context "on #{os}" do
       let :facts do
         facts
       end
@@ -12,6 +14,7 @@ describe 'wireguard::interface', type: :define do
       context 'with all defaults it wont work' do
         it { is_expected.not_to compile }
       end
+
       context 'with required params (public_key) and without firewall rules' do
         let :params do
           {
@@ -40,6 +43,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{MTUBytes}) }
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
+
       context 'with required params (peers) and without firewall rules' do
         let :params do
           {
@@ -80,6 +84,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(expected_network_content) }
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
+
       context 'with required params and with firewall rules' do
         # we need to set configfile/configdirectory because the ferm module doesn't provide defaults for all OSes we test against
         let :pre_condition do
@@ -112,6 +117,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Address}) }
         it { is_expected.to contain_ferm__rule("allow_wg_#{title}") }
       end
+
       context 'with required params and without firewall rules and with configured addresses' do
         let :params do
           {
@@ -132,12 +138,13 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/wireguard/#{title}") }
         it { is_expected.to contain_systemd__network("#{title}.netdev") }
         it { is_expected.to contain_systemd__network("#{title}.network") }
-        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{[Address]}) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{[Address]}) } # rubocop:disable Lint/DuplicateRegexpCharacterClassElement
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=192.168.218.87/32}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Peer=172.20.53.97/32}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=fe80::ade1/64}) }
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
+
       context 'with empty destintion_addresses' do
         let :pre_condition do
           'class{"ferm":
@@ -160,6 +167,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_ferm__rule("allow_wg_#{title}").without_daddr }
       end
+
       context 'with description' do
         let :params do
           {
@@ -176,6 +184,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{Description=bla}) }
       end
+
       context 'with MTU' do
         let :params do
           {
@@ -192,6 +201,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{MTUBytes=9000}) }
       end
+
       context 'with too high MTU' do
         let :params do
           {
@@ -207,6 +217,7 @@ describe 'wireguard::interface', type: :define do
 
         it { is_expected.not_to compile.with_all_deps }
       end
+
       context 'with MTU as string' do
         let :params do
           {
