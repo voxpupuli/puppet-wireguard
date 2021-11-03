@@ -16,7 +16,7 @@ class wireguard (
   Enum['installed', 'latest', 'absent'] $package_ensure = 'installed',
   Stdlib::Absolutepath $config_directory = '/etc/wireguard',
   Boolean $purge_unknown_keys = true,
-  Hash $interfaces = {},
+  Hash[String[1], Any] $interfaces = {},
 ) {
   if $manage_package {
     package { 'wireguard-tools':
