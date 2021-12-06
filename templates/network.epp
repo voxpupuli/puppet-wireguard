@@ -1,6 +1,7 @@
 <%- |
     Array[Hash] $addresses,
     String[1] $interface,
+    Array[Hash[String[1], Variant[String[1], Boolean]]] $routes,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
 # based on https://dn42.dev/howto/wireguard
@@ -19,6 +20,13 @@ KeepConfiguration=yes
 
 [Address]
 <% $address.each |$key, $value| { -%>
+<%= $key %>=<%= $value %>
+<% } -%>
+<% } -%>
+<% $routes.each |$route| { -%>
+
+[Route]
+<% $route.each |$key, $value| { -%>
 <%= $key %>=<%= $value %>
 <% } -%>
 <% } -%>
