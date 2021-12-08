@@ -10,5 +10,6 @@ type Wireguard::Peers = Array[
     allowed_ips          => Optional[Array[String[1]]],
     endpoint             => Optional[String[1]],
     persistent_keepalive => Optional[Stdlib::Port],
+    description          => Optional[String[1]],
   }]
 ]

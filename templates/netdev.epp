@@ -22,6 +22,9 @@ ListenPort=<%= $dport %>
 <% $peers.each |$peer| { -%>
 
 [WireGuardPeer]
+<% if $peer['description'] { -%>
+Description=<%= $peer['description'] %>
+<% } -%>
 PublicKey=<%= $peer['public_key'] %>
 <% if $peer['endpoint'] { -%>
 Endpoint=<%= $peer['endpoint'] %>
