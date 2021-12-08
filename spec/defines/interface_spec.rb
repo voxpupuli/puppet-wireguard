@@ -234,7 +234,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.not_to compile.with_all_deps }
       end
 
-      context 'with required params (peers), routes and without firewall rules' do
+      context 'with required params (peers), route and without firewall rules' do
         let :params do
           {
             peers: [
@@ -261,19 +261,82 @@ describe 'wireguard::interface', type: :define do
         end
 
         let(:expected_network_content) do
+          File.read('spec/fixtures/test_files/peer_route.network')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(expected_netdev_content) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(expected_network_content) }
+      end
+
+      context 'with required params (peers), routes and without firewall rules' do
+        let :params do
+          {
+            peers: [
+              {
+                public_key: 'blabla==',
+                endpoint: 'wireguard.example.com:1234',
+              },
+              {
+                public_key: 'foo==',
+                allowed_ips: ['192.0.2.3'],
+              }
+            ],
+            manage_firewall: false,
+            # we need to set destination_addresses to overwrite the default
+            # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
+            destination_addresses: [facts[:networking]['ip'],],
+            addresses: [{ 'Address' => '192.0.2.1/24' }],
+            routes: [{ 'Gateway' => '192.0.2.2', 'GatewayOnLink' => true, 'Destination' => '192.0.3.0/24' }, { 'foo' => 'bar' }],
+          }
+        end
+
+        let(:expected_netdev_content) do
+          File.read('spec/fixtures/test_files/peers.netdev')
+        end
+
+        let(:expected_network_content) do
+          File.read('spec/fixtures/test_files/peer_routes.network')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(expected_netdev_content) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(expected_network_content) }
+      end
+
+      context 'with required params (peers), routes and without firewall rules and multiple addresses' do
+        let :params do
+          {
+            peers: [
+              {
+                public_key: 'blabla==',
+                endpoint: 'wireguard.example.com:1234',
+              },
+              {
+                public_key: 'foo==',
+                allowed_ips: ['192.0.2.3'],
+              }
+            ],
+            manage_firewall: false,
+            # we need to set destination_addresses to overwrite the default
+            # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
+            destination_addresses: [facts[:networking]['ip'],],
+            addresses: [{ 'Address' => '192.0.2.1/24' }, { 'Address' => 'fe80::2/64' }],
+            routes: [{ 'Gateway' => '192.0.2.2', 'GatewayOnLink' => true, 'Destination' => '192.0.3.0/24' }, { 'foo' => 'bar' }],
+          }
+        end
+
+        let(:expected_netdev_content) do
+          File.read('spec/fixtures/test_files/peers.netdev')
+        end
+
+        let(:expected_network_content) do
           File.read('spec/fixtures/test_files/peers_routes.network')
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_class('wireguard') }
-        it { is_expected.to contain_exec("generate #{title} keys") }
-        it { is_expected.to contain_file("/etc/wireguard/#{title}.pub") }
-        it { is_expected.to contain_file("/etc/wireguard/#{title}") }
-        it { is_expected.to contain_systemd__network("#{title}.netdev") }
-        it { is_expected.to contain_systemd__network("#{title}.network") }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(expected_netdev_content) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(expected_network_content) }
-        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
     end
   end
