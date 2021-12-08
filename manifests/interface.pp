@@ -14,6 +14,7 @@
 # @param description an optional string that will be added to the wireguard network interface
 # @param mtu configure the MTU (maximum transision unit) for the wireguard tunnel. By default linux will figure this out. You might need to lower it if you're connection through a DSL line. MTU needs to be equal on both tunnel endpoints
 # @param peers is an array of struct (Wireguard::Peers) for multiple peers
+# @param routes different routes for the systemd-networkd configuration
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 # @author Sebastian Rakel <sebastian@devunit.eu>
@@ -87,6 +88,7 @@ define wireguard::interface (
   Optional[String[1]] $description = undef,
   Optional[Integer[1280, 9000]] $mtu = undef,
   Optional[String[1]] $public_key = undef,
+  Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
 ) {
   require wireguard
 
@@ -155,8 +157,14 @@ define wireguard::interface (
     require         => File["/etc/wireguard/${interface}"],
   }
 
+  $network_epp_params = {
+    'interface' => $interface,
+    'addresses' => $addresses,
+    'routes'    => $routes,
+  }
+
   systemd::network { "${interface}.network":
-    content         => epp("${module_name}/network.epp", { 'interface' => $interface, 'addresses' => $addresses }),
+    content         => epp("${module_name}/network.epp", $network_epp_params),
     restart_service => true,
     owner           => 'root',
     group           => 'systemd-network',
