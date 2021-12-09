@@ -54,6 +54,7 @@ describe 'wireguard::interface', type: :define do
               },
               {
                 public_key: 'foo==',
+                description: 'foo',
                 allowed_ips: ['192.0.2.3'],
               }
             ],
@@ -244,6 +245,7 @@ describe 'wireguard::interface', type: :define do
               },
               {
                 public_key: 'foo==',
+                description: 'foo',
                 allowed_ips: ['192.0.2.3'],
               }
             ],
