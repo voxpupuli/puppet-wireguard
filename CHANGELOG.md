@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.10.0](https://github.com/voxpupuli/puppet-wireguard/tree/v0.10.0) (2021-12-10)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.9.0...v0.10.0)
+
+**Implemented enhancements:**
+
+- Add description to peers [\#38](https://github.com/voxpupuli/puppet-wireguard/pull/38) ([sebastianrakel](https://github.com/sebastianrakel))
+- Add possibility to define routes [\#36](https://github.com/voxpupuli/puppet-wireguard/pull/36) ([sebastianrakel](https://github.com/sebastianrakel))
+
 ## [v0.9.0](https://github.com/voxpupuli/puppet-wireguard/tree/v0.9.0) (2021-09-17)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.8.2...v0.9.0)
