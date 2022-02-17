@@ -42,5 +42,9 @@ class wireguard (
     *      => $options,
   }
 
-  create_resources(wireguard::interface, $interfaces)
+  $interfaces.each | $interfacename, $interfaceattributes {
+    wireguard::interface { $interfacename:
+      * => $interfaceattributes
+    }
+  }
 }
