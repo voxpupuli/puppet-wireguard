@@ -42,7 +42,7 @@ class wireguard (
     *      => $options,
   }
 
-  $interfaces.each | $interfacename, $interfaceattributes {
+  $interfaces.each | $interfacename, $interfaceattributes| {
     wireguard::interface { $interfacename:
       * => $interfaceattributes
     }
