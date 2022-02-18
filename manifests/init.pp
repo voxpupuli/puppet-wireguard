@@ -6,6 +6,7 @@
 # @param package_ensure the ensure state of the package
 # @param config_directory the path to the wireguard directory
 # @param purge_unknown_keys by default Puppet will purge unknown wireguard keys from `$config_directory`
+# @param interfaces hash of interfaces to create. Provides hiera integration.
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 #
@@ -15,6 +16,7 @@ class wireguard (
   Enum['installed', 'latest', 'absent'] $package_ensure = 'installed',
   Stdlib::Absolutepath $config_directory = '/etc/wireguard',
   Boolean $purge_unknown_keys = true,
+  Hash[String[1], Any] $interfaces = {},
 ) {
   if $manage_package {
     package { 'wireguard-tools':
@@ -38,5 +40,11 @@ class wireguard (
     mode   => '0750',
     group  => 'systemd-network',
     *      => $options,
+  }
+
+  $interfaces.each |$interfacename, $interfaceattributes| {
+    wireguard::interface { $interfacename:
+      * => $interfaceattributes,
+    }
   }
 }
