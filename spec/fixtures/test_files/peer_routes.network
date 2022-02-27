@@ -15,9 +15,6 @@ KeepConfiguration=yes
 [Address]
 Address=192.0.2.1/24
 
-[Address]
-Address=fe80::2/64
-
 [Route]
 Gateway=192.0.2.2
 GatewayOnLink=true

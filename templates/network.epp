@@ -29,5 +29,4 @@ KeepConfiguration=yes
 <% $route.each |$key, $value| { -%>
 <%= $key %>=<%= $value %>
 <% } -%>
-<% } -%>
-
+<% } %>
