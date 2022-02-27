@@ -21,7 +21,7 @@ Puppet module to configure wireguard through systemd-networkd configs
 ## Setup
 
 The module can create firewall rules with [voxpupuli/ferm](https://github.com/voxpupuli/puppet-ferm#puppet-ferm).
-This is enabled by default can be disabled by setting the `manage_firewall`
+This is enabled by default but can be disabled by setting the `manage_firewall`
 parameter to false in the `wireguard::interface` defined resource. You need to
 have the `ferm` class in your catalog to use the feature.
 
@@ -30,7 +30,7 @@ You need to have a systemd-networkd service resource in your catalog. We recomme
 [voxpupuli/systemd](https://github.com/voxpupuli/puppet-systemd#systemd) with
 `manage_networkd` set to true.
 
-Furthermore this module assumes that you've a dualstack machine. Your IPv4 and
+Furthermore, this module assumes that you've a dualstack machine. Your IPv4 and
 IPv6 addresses will be automatically set to the `destination_addresses` array
 from the `wireguard::interface` defined resource. If you don't have dualstack
 you need to overwrite the parameter.
