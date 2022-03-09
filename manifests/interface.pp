@@ -15,6 +15,7 @@
 # @param mtu configure the MTU (maximum transision unit) for the wireguard tunnel. By default linux will figure this out. You might need to lower it if you're connection through a DSL line. MTU needs to be equal on both tunnel endpoints
 # @param peers is an array of struct (Wireguard::Peers) for multiple peers
 # @param routes different routes for the systemd-networkd configuration
+# @param private_key Define private key which should be used for this interface, if not provided a private key will be generated
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 # @author Sebastian Rakel <sebastian@devunit.eu>
@@ -89,6 +90,7 @@ define wireguard::interface (
   Optional[Integer[1280, 9000]] $mtu = undef,
   Optional[String[1]] $public_key = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
+  Optional[String[1]] $private_key = undef,
 ) {
   require wireguard
 
@@ -112,25 +114,49 @@ define wireguard::interface (
       notify    => Service['systemd-networkd'],
     }
   }
-  exec { "generate ${interface} keys":
-    command => "wg genkey | tee ${interface} | wg pubkey > ${interface}.pub",
+
+  $private_key_path = "${wireguard::config_directory}/${interface}"
+
+  if $private_key {
+    file { $private_key_path:
+      ensure  => 'file',
+      content => $private_key,
+      owner   => 'root',
+      group   => 'systemd-network',
+      mode    => '0640',
+      notify  => Exec["generate public key ${interface}"],
+    }
+  } else {
+    exec { "generate private key ${interface}":
+      command => "wg genkey > ${interface}",
+      cwd     => $wireguard::config_directory,
+      creates => $private_key_path,
+      path    => '/usr/bin',
+      before  => File[$private_key_path],
+      notify  => Exec["generate public key ${interface}"],
+    }
+
+    file { $private_key_path:
+      ensure => 'file',
+      owner  => 'root',
+      group  => 'systemd-network',
+      mode   => '0640',
+    }
+  }
+
+  exec { "generate public key ${interface}":
+    command => "wg pubkey < ${interface} > ${interface}.pub",
     cwd     => $wireguard::config_directory,
     creates => "${wireguard::config_directory}/${interface}.pub",
     path    => '/usr/bin',
   }
-  file { "${wireguard::config_directory}/${interface}":
-    ensure  => 'file',
-    owner   => 'root',
-    group   => 'systemd-network',
-    mode    => '0640',
-    require => Exec["generate ${interface} keys"],
-  }
+
   file { "${wireguard::config_directory}/${interface}.pub":
     ensure  => 'file',
     owner   => 'root',
     group   => 'root',
     mode    => '0600',
-    require => Exec["generate ${interface} keys"],
+    require => Exec["generate public key ${interface}"],
   }
 
   if $public_key {
