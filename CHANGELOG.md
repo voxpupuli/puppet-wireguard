@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v1.0.0](https://github.com/voxpupuli/puppet-wireguard/tree/v1.0.0) (2022-03-11)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.10.0...v1.0.0)
+
+**Implemented enhancements:**
+
+- Create private\_key from parameter if wanted [\#43](https://github.com/voxpupuli/puppet-wireguard/pull/43) ([sebastianrakel](https://github.com/sebastianrakel))
+
+**Merged pull requests:**
+
+- Minor grammar corrections [\#41](https://github.com/voxpupuli/puppet-wireguard/pull/41) ([hashworks](https://github.com/hashworks))
+- Provide hiera integration [\#35](https://github.com/voxpupuli/puppet-wireguard/pull/35) ([bahner](https://github.com/bahner))
+
 ## [v0.10.0](https://github.com/voxpupuli/puppet-wireguard/tree/v0.10.0) (2021-12-10)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.9.0...v0.10.0)

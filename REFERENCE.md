@@ -31,6 +31,7 @@ The following parameters are available in the `wireguard` class:
 * [`package_ensure`](#package_ensure)
 * [`config_directory`](#config_directory)
 * [`purge_unknown_keys`](#purge_unknown_keys)
+* [`interfaces`](#interfaces)
 
 ##### <a name="manage_package"></a>`manage_package`
 
@@ -71,6 +72,14 @@ Data type: `Boolean`
 by default Puppet will purge unknown wireguard keys from `$config_directory`
 
 Default value: ``true``
+
+##### <a name="interfaces"></a>`interfaces`
+
+Data type: `Hash[String[1], Any]`
+
+hash of interfaces to create. Provides hiera integration.
+
+Default value: `{}`
 
 ## Defined types
 
@@ -167,6 +176,8 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`description`](#description)
 * [`mtu`](#mtu)
 * [`peers`](#peers)
+* [`routes`](#routes)
+* [`private_key`](#private_key)
 
 ##### <a name="interface"></a>`interface`
 
@@ -272,6 +283,22 @@ is an array of struct (Wireguard::Peers) for multiple peers
 
 Default value: `[]`
 
+##### <a name="routes"></a>`routes`
+
+Data type: `Array[Hash[String[1], Variant[String[1], Boolean]]]`
+
+different routes for the systemd-networkd configuration
+
+Default value: `[]`
+
+##### <a name="private_key"></a>`private_key`
+
+Data type: `Optional[String[1]]`
+
+Define private key which should be used for this interface, if not provided a private key will be generated
+
+Default value: ``undef``
+
 ## Data types
 
 ### <a name="wireguardpeers"></a>`Wireguard::Peers`
@@ -289,6 +316,7 @@ Array[Struct[{
     allowed_ips          => Optional[Array[String[1]]],
     endpoint             => Optional[String[1]],
     persistent_keepalive => Optional[Stdlib::Port],
+    description          => Optional[String[1]],
   }]]
 ```
 
