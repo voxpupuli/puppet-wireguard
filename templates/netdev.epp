@@ -2,6 +2,7 @@
       Stdlib::Port $dport,
       Wireguard::Peers $peers,
       Optional[String] $description,
+      Optional[String] $preshared_key,
       Optional[Integer] $mtu,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
@@ -18,6 +19,7 @@ MTUBytes=<%= $mtu %>
 
 [WireGuard]
 PrivateKeyFile=/etc/wireguard/<%= $interface %>
+
 ListenPort=<%= $dport %>
 <% $peers.each |$peer| { -%>
 
@@ -26,6 +28,9 @@ ListenPort=<%= $dport %>
 Description=<%= $peer['description'] %>
 <% } -%>
 PublicKey=<%= $peer['public_key'] %>
+<% if $preshared_key { -%>
+PresharedKey=<%= $preshared_key %>
+<% } -%>
 <% if $peer['endpoint'] { -%>
 Endpoint=<%= $peer['endpoint'] %>
 <% } -%>
