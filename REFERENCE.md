@@ -131,6 +131,7 @@ wireguard::interface {'as2273':
 wireguard::interface {'as3668-2':
   source_addresses      => ['144.76.249.220', '2a01:4f8:171:1152::12'],
   public_key            => 'Tci/bHoPCjTpYv8bw17xQ7P4OdqzGpEN+NDueNjUvBA=',
+  preshared_key         => '/22q9I+RpWRsU+zshW8skv1p00TvnEE6fTvPJuI2Cp4=',
   endpoint              => 'router02.bastelfreak.org:1338',
   dport                 => 1338,
   input_interface       => $facts['networking']['primary'],
@@ -178,6 +179,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`peers`](#peers)
 * [`routes`](#routes)
 * [`private_key`](#private_key)
+* [`preshared_key`](#preshared_key)
 
 ##### <a name="interface"></a>`interface`
 
@@ -296,6 +298,14 @@ Default value: `[]`
 Data type: `Optional[String[1]]`
 
 Define private key which should be used for this interface, if not provided a private key will be generated
+
+Default value: ``undef``
+
+##### <a name="preshared_key"></a>`preshared_key`
+
+Data type: `Optional[String[1]]`
+
+Define preshared key which should be used for this interface
 
 Default value: ``undef``
 
