@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v1.1.0](https://github.com/voxpupuli/puppet-wireguard/tree/v1.1.0) (2022-08-03)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v1.0.0...v1.1.0)
+
+**Implemented enhancements:**
+
+- Allow usage of pre-shared keys on interfaces [\#49](https://github.com/voxpupuli/puppet-wireguard/pull/49) ([Southparkfan](https://github.com/Southparkfan))
+
+**Merged pull requests:**
+
+- Enable basic acceptance tests [\#48](https://github.com/voxpupuli/puppet-wireguard/pull/48) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v1.0.0](https://github.com/voxpupuli/puppet-wireguard/tree/v1.0.0) (2022-03-11)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v0.10.0...v1.0.0)
