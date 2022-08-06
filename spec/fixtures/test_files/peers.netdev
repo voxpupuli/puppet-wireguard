@@ -19,5 +19,6 @@ AllowedIPs=0.0.0.0/0
 [WireGuardPeer]
 Description=foo
 PublicKey=foo==
+PresharedKey=bar=
 PersistentKeepalive=0
 AllowedIPs=192.0.2.3

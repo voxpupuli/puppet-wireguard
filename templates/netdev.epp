@@ -3,7 +3,6 @@
       Wireguard::Peers $peers,
       Optional[String] $description,
       Optional[Integer] $mtu,
-      Optional[String[1]] $preshared_key,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
 # based on https://dn42.dev/howto/wireguard
@@ -27,8 +26,8 @@ ListenPort=<%= $dport %>
 Description=<%= $peer['description'] %>
 <% } -%>
 PublicKey=<%= $peer['public_key'] %>
-<% if $preshared_key { -%>
-PresharedKey=<%= $preshared_key %>
+<% if $peer['preshared_key'] { -%>
+PresharedKey=<%= $peer['preshared_key'] %>
 <% } -%>
 <% if $peer['endpoint'] { -%>
 Endpoint=<%= $peer['endpoint'] %>

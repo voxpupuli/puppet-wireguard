@@ -16,7 +16,6 @@
 # @param peers is an array of struct (Wireguard::Peers) for multiple peers
 # @param routes different routes for the systemd-networkd configuration
 # @param private_key Define private key which should be used for this interface, if not provided a private key will be generated
-# @param preshared_key Define preshared key which should be used for this interface
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 # @author Sebastian Rakel <sebastian@devunit.eu>
@@ -51,7 +50,6 @@
 #  wireguard::interface {'as3668-2':
 #    source_addresses      => ['144.76.249.220', '2a01:4f8:171:1152::12'],
 #    public_key            => 'Tci/bHoPCjTpYv8bw17xQ7P4OdqzGpEN+NDueNjUvBA=',
-#    preshared_key         => '/22q9I+RpWRsU+zshW8skv1p00TvnEE6fTvPJuI2Cp4=',
 #    endpoint              => 'router02.bastelfreak.org:1338',
 #    dport                 => 1338,
 #    input_interface       => $facts['networking']['primary'],
@@ -61,13 +59,14 @@
 #    mtu                   => 1412,
 # }
 #
-# @example create a wireguard interface with multiple peers
+# @example create a wireguard interface with multiple peers where one uses a preshared key
 #  wireguard::interface { 'wg0':
 #    dport     => 1338,
 #    addresses => [{'Address' => '192.0.2.1/24'}],
 #    peers     => [
 #      {
 #         public_key  => 'foo==',
+#         preshared_key => '/22q9I+RpWRsU+zshW8skv1p00TvnEE6fTvPJuI2Cp4=',
 #         allowed_ips => ['192.0.2.2'],
 #      },
 #      {
@@ -93,7 +92,6 @@ define wireguard::interface (
   Optional[String[1]] $public_key = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
   Optional[String[1]] $private_key = undef,
-  Optional[String[1]] $preshared_key = undef,
 ) {
   require wireguard
 
@@ -173,12 +171,11 @@ define wireguard::interface (
 
   systemd::network { "${interface}.netdev":
     content         => epp("${module_name}/netdev.epp", {
-        'interface'     => $interface,
-        'dport'         => $dport,
-        'description'   => $description,
-        'preshared_key' => $preshared_key,
-        'mtu'           => $mtu,
-        'peers'         => $peers + $peer,
+        'interface'   => $interface,
+        'dport'       => $dport,
+        'description' => $description,
+        'mtu'         => $mtu,
+        'peers'       => $peers + $peer,
     }),
     restart_service => true,
     owner           => 'root',
