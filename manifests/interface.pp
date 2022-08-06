@@ -99,7 +99,7 @@ define wireguard::interface (
   Optional[String[1]] $preshared_key = undef,
   Enum['systemd', 'wgquick'] $provider = 'systemd',
 ) {
-  require wireguard
+  include wireguard
 
   if empty($peers) and !$public_key {
     warning('peers or public_key have to been set')
