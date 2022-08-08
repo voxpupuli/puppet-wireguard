@@ -17,6 +17,7 @@
 # @param routes different routes for the systemd-networkd configuration
 # @param private_key Define private key which should be used for this interface, if not provided a private key will be generated
 # @param preshared_key Define preshared key for the remote peer
+# @param provider Set provider for interface config. Allowed values: systemd, wgquick (default: systemd)
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 # @author Sebastian Rakel <sebastian@devunit.eu>
@@ -94,6 +95,7 @@ define wireguard::interface (
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
   Optional[String[1]] $private_key = undef,
   Optional[String[1]] $preshared_key = undef,
+  Enum['systemd', 'wgquick'] $provider = 'systemd',
 ) {
   require wireguard
 
@@ -172,32 +174,28 @@ define wireguard::interface (
     $peer = []
   }
 
-  systemd::network { "${interface}.netdev":
-    content         => epp("${module_name}/netdev.epp", {
-        'interface'   => $interface,
-        'dport'       => $dport,
-        'description' => $description,
-        'mtu'         => $mtu,
-        'peers'       => $peers + $peer,
-    }),
-    restart_service => true,
-    owner           => 'root',
-    group           => 'systemd-network',
-    mode            => '0440',
-    require         => File["/etc/wireguard/${interface}"],
-  }
-
-  $network_epp_params = {
-    'interface' => $interface,
-    'addresses' => $addresses,
-    'routes'    => $routes,
-  }
-
-  systemd::network { "${interface}.network":
-    content         => epp("${module_name}/network.epp", $network_epp_params),
-    restart_service => true,
-    owner           => 'root',
-    group           => 'systemd-network',
-    mode            => '0440',
+  case $provider {
+    'systemd': {
+      class { 'wireguard::provider::systemd':
+        interface   => $interface,
+        peers       => $peers + $peer,
+        dport       => $dport,
+        addresses   => $addresses,
+        description => $description,
+        mtu         => $mtu,
+        routes      => $routes,
+      }
+    }
+    'wgquick': {
+      class { 'wireguard::provider::wgquick':
+        interface => $interface,
+        peers     => $peers + $peer,
+        dport     => $dport,
+        addresses => $addresses,
+      }
+    }
+    default: {
+      fail("provider ${provider} not supported")
+    }
   }
 }

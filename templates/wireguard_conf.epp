@@ -1,0 +1,28 @@
+<%- |
+    String[1] $interface,
+    Stdlib::Port $dport,
+    Wireguard::Peers $peers,
+    Array[Hash] $addresses,
+    Optional[String[1]] $preshared_key,
+| -%>
+[Interface]
+<% $addresses.each |$address| { -%>
+Address = <%= $address['Address'] %>
+<% } -%>
+ListenPort = <%= $dport %>
+PostUp = wg set %i private-key /etc/wireguard/<%= $interface %>
+<% $peers.each |$peer| { -%>
+
+[Peer]
+PublicKey=<%= $peer['public_key'] %>
+<% if $peer['endpoint'] { -%>
+Endpoint=<%= $peer['endpoint'] %>
+<% } -%>
+<% if $preshared_key { -%>
+PresharedKey=<%= $preshared_key %>
+<% } -%>
+PersistentKeepalive=<%= pick($peer['persistent_keepalive'], 0) %>
+<% pick($peer['allowed_ips'], ['fe80::/64', 'fd00::/8', '0.0.0.0/0']).each |$allowed_ip| { -%>
+AllowedIPs=<%= $allowed_ip %>
+<% } -%>
+<% } -%>
