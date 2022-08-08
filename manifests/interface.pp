@@ -176,22 +176,22 @@ define wireguard::interface (
 
   case $provider {
     'systemd': {
-      class { 'wireguard::provider::systemd':
-        interface   => $interface,
-        peers       => $peers + $peer,
-        dport       => $dport,
-        addresses   => $addresses,
-        description => $description,
-        mtu         => $mtu,
-        routes      => $routes,
+      wireguard::provider::systemd { $interface :
+        interface     => $interface,
+        peers         => $peers + $peer,
+        dport         => $dport,
+        addresses     => $addresses,
+        description   => $description,
+        mtu           => $mtu,
+        routes        => $routes,
       }
     }
     'wgquick': {
-      class { 'wireguard::provider::wgquick':
-        interface => $interface,
-        peers     => $peers + $peer,
-        dport     => $dport,
-        addresses => $addresses,
+      wireguard::provider::wgquick { $interface :
+        interface     => $interface,
+        peers         => $peers + $peer,
+        dport         => $dport,
+        addresses     => $addresses,
       }
     }
     default: {
