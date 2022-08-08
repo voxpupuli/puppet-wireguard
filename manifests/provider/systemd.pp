@@ -1,5 +1,5 @@
 #
-# @summary manages a systemd wireguard interface
+# @api private
 #
 define wireguard::provider::systemd (
   String[1] $interface = $title,
@@ -11,6 +11,7 @@ define wireguard::provider::systemd (
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
   Optional[String[1]] $preshared_key = undef,
 ) {
+  assert_private()
   systemd::network { "${interface}.netdev":
     content         => epp("${module_name}/netdev.epp", {
         'interface'     => $interface,

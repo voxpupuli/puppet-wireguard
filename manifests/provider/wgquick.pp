@@ -1,11 +1,5 @@
 #
-# @summary manages a wireguard config file for wg-quick
-#
-# @param interface the title of the defined resource, will be used for the wg interface
-# @param peers is an array of struct (Wireguard::Peers) for multiple peers
-# @param dport destination for firewall rules / where our wg instance will listen on. defaults to the last digits from the title
-# @param addresses different addresses for the systemd-networkd configuration
-# @param preshared_key Define preshared key which should be used for this interface
+# @api private
 #
 define wireguard::provider::wgquick (
   String[1] $interface = $title,
@@ -14,6 +8,7 @@ define wireguard::provider::wgquick (
   Array[Hash[String,Variant[Stdlib::IP::Address::V4::CIDR,Stdlib::IP::Address::V6::CIDR]]] $addresses = [],
   Optional[String[1]] $preshared_key = undef,
 ) {
+  assert_private()
   $params = {
     'interface'     => $interface,
     'dport'         => $dport,
