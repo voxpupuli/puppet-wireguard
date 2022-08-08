@@ -3,7 +3,6 @@
     Stdlib::Port $dport,
     Wireguard::Peers $peers,
     Array[Hash] $addresses,
-    Optional[String[1]] $preshared_key,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
 [Interface]
@@ -22,8 +21,8 @@ PublicKey=<%= $peer['public_key'] %>
 <% if $peer['endpoint'] { -%>
 Endpoint=<%= $peer['endpoint'] %>
 <% } -%>
-<% if $preshared_key { -%>
-PresharedKey=<%= $preshared_key %>
+<% if $peer['preshared_key'] { -%>
+PresharedKey=<%= $peer['preshared_key'] %>
 <% } -%>
 PersistentKeepalive=<%= pick($peer['persistent_keepalive'], 0) %>
 <% pick($peer['allowed_ips'], ['fe80::/64', 'fd00::/8', '0.0.0.0/0']).each |$allowed_ip| { -%>
