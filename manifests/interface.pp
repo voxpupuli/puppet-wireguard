@@ -16,6 +16,7 @@
 # @param peers is an array of struct (Wireguard::Peers) for multiple peers
 # @param routes different routes for the systemd-networkd configuration
 # @param private_key Define private key which should be used for this interface, if not provided a private key will be generated
+# @param preshared_key Define preshared key for the remote peer
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 # @author Sebastian Rakel <sebastian@devunit.eu>
@@ -92,6 +93,7 @@ define wireguard::interface (
   Optional[String[1]] $public_key = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
   Optional[String[1]] $private_key = undef,
+  Optional[String[1]] $preshared_key = undef,
 ) {
   require wireguard
 
@@ -162,8 +164,9 @@ define wireguard::interface (
 
   if $public_key {
     $peer = [{
-        public_key => $public_key,
-        endpoint   => $endpoint,
+        public_key    => $public_key,
+        endpoint      => $endpoint,
+        preshared_key => $preshared_key,
     }]
   } else {
     $peer = []
