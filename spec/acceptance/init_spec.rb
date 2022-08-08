@@ -31,6 +31,20 @@ describe 'wireguard' do
              }
            ],
          }
+
+         wireguard::interface { 'tun1':
+           manage_firewall       => false,
+           dport                 => 51821,
+           destination_addresses => [$facts['networking']['ip']],
+           addresses             => [{'Address' => '192.0.3.1/24'}],
+           provider              => 'wgquick',
+           peers                 => [
+             {
+               public_key  => 'hZC2VwCilfF9k9nQC6a86xOBFKaqdAgy123dkA6Z008=',
+               allowed_ips => ['192.0.3.3'],
+             }
+           ],
+         }
       EOS
 
       apply_manifest(pp, catch_failures: true)
