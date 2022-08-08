@@ -6,15 +6,13 @@ define wireguard::provider::wgquick (
   Wireguard::Peers $peers = [],
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
   Array[Hash[String,Variant[Stdlib::IP::Address::V4::CIDR,Stdlib::IP::Address::V6::CIDR]]] $addresses = [],
-  Optional[String[1]] $preshared_key = undef,
 ) {
   assert_private()
   $params = {
-    'interface'     => $interface,
-    'dport'         => $dport,
-    'peers'         => $peers,
-    'addresses'     => $addresses,
-    'preshared_key' => $preshared_key,
+    'interface' => $interface,
+    'dport'     => $dport,
+    'peers'     => $peers,
+    'addresses' => $addresses,
   }
 
   file { "/etc/wireguard/${interface}.conf":

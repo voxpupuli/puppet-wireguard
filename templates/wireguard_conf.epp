@@ -5,6 +5,7 @@
     Array[Hash] $addresses,
     Optional[String[1]] $preshared_key,
 | -%>
+# THIS FILE IS MANAGED BY PUPPET
 [Interface]
 <% $addresses.each |$address| { -%>
 Address = <%= $address['Address'] %>
@@ -13,6 +14,9 @@ ListenPort = <%= $dport %>
 PostUp = wg set %i private-key /etc/wireguard/<%= $interface %>
 <% $peers.each |$peer| { -%>
 
+<% if $peer['description'] { -%>
+# <%= $peer['description'] %>
+<% } -%>
 [Peer]
 PublicKey=<%= $peer['public_key'] %>
 <% if $peer['endpoint'] { -%>

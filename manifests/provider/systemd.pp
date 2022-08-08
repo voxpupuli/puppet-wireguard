@@ -9,17 +9,15 @@ define wireguard::provider::systemd (
   Optional[String[1]] $description = undef,
   Optional[Integer[1280, 9000]] $mtu = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
-  Optional[String[1]] $preshared_key = undef,
 ) {
   assert_private()
   systemd::network { "${interface}.netdev":
     content         => epp("${module_name}/netdev.epp", {
-        'interface'     => $interface,
-        'dport'         => $dport,
-        'description'   => $description,
-        'mtu'           => $mtu,
-        'peers'         => $peers,
-        'preshared_key' => $preshared_key,
+        'interface'   => $interface,
+        'dport'       => $dport,
+        'description' => $description,
+        'mtu'         => $mtu,
+        'peers'       => $peers,
     }),
     restart_service => true,
     owner           => 'root',

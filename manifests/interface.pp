@@ -16,7 +16,7 @@
 # @param peers is an array of struct (Wireguard::Peers) for multiple peers
 # @param routes different routes for the systemd-networkd configuration
 # @param private_key Define private key which should be used for this interface, if not provided a private key will be generated
-# @param preshared_key Define preshared key which should be used for this interface
+# @param preshared_key Define preshared key for the remote peer
 # @param provider The specific backend to use for this `wireguard::interface` resource
 #
 # @author Tim Meusel <tim@bastelfreak.de>
@@ -177,21 +177,21 @@ define wireguard::interface (
   case $provider {
     'systemd': {
       wireguard::provider::systemd { $interface :
-        interface     => $interface,
-        peers         => $peers + $peer,
-        dport         => $dport,
-        addresses     => $addresses,
-        description   => $description,
-        mtu           => $mtu,
-        routes        => $routes,
+        interface   => $interface,
+        peers       => $peers + $peer,
+        dport       => $dport,
+        addresses   => $addresses,
+        description => $description,
+        mtu         => $mtu,
+        routes      => $routes,
       }
     }
     'wgquick': {
       wireguard::provider::wgquick { $interface :
-        interface     => $interface,
-        peers         => $peers + $peer,
-        dport         => $dport,
-        addresses     => $addresses,
+        interface => $interface,
+        peers     => $peers + $peer,
+        dport     => $dport,
+        addresses => $addresses,
       }
     }
     default: {
