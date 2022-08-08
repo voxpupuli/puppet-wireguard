@@ -55,6 +55,7 @@ describe 'wireguard::interface', type: :define do
               },
               {
                 public_key: 'foo==',
+                preshared_key: 'bar=',
                 description: 'foo',
                 allowed_ips: ['192.0.2.3'],
               }
@@ -122,7 +123,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_ferm__rule("allow_wg_#{title}") }
       end
 
-      context 'with required params and without firewall rules and with configured addresses and with preshared key' do
+      context 'with required params and without firewall rules and with configured addresses' do
         let :params do
           {
             public_key: 'blabla==',
@@ -132,7 +133,6 @@ describe 'wireguard::interface', type: :define do
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
             destination_addresses: [facts[:networking]['ip'],],
             addresses: [{ 'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32' }, { 'Address' => 'fe80::ade1/64', },],
-            preshared_key: 'mypsk==',
           }
         end
 
@@ -148,7 +148,6 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=192.168.218.87/32}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Peer=172.20.53.97/32}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=fe80::ade1/64}) }
-        it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{PresharedKey=mypsk==}) }
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
 
@@ -251,6 +250,7 @@ describe 'wireguard::interface', type: :define do
               },
               {
                 public_key: 'foo==',
+                preshared_key: 'bar=',
                 description: 'foo',
                 allowed_ips: ['192.0.2.3'],
               }
