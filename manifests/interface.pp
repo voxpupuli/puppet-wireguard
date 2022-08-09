@@ -79,6 +79,7 @@
 #  }
 #
 define wireguard::interface (
+  Enum['present', 'absent'] $ensure = 'present',
   Wireguard::Peers $peers = [],
   Optional[String[1]] $endpoint = undef,
   Integer[0, 65535] $persistent_keepalive = 0,
@@ -177,6 +178,7 @@ define wireguard::interface (
   case $provider {
     'systemd': {
       wireguard::provider::systemd { $interface :
+        ensure      => $ensure,
         interface   => $interface,
         peers       => $peers + $peer,
         dport       => $dport,
@@ -188,6 +190,7 @@ define wireguard::interface (
     }
     'wgquick': {
       wireguard::provider::wgquick { $interface :
+        ensure    => $ensure,
         interface => $interface,
         peers     => $peers + $peer,
         dport     => $dport,
