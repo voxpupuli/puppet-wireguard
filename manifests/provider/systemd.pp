@@ -1,4 +1,4 @@
-#
+# @summary Manage the systemd components of a wireguard setup
 # @api private
 #
 define wireguard::provider::systemd (
