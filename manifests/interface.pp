@@ -2,6 +2,7 @@
 # @summary manages a wireguard setup
 #
 # @param interface the title of the defined resource, will be used for the wg interface
+# @param ensure will ensure that the files for the provider will be present or absent
 # @param input_interface ethernet interface where the wireguard packages will enter the system, used for firewall rules
 # @param manage_firewall if true, a ferm rule will be created
 # @param dport destination for firewall rules / where our wg instance will listen on. defaults to the last digits from the title

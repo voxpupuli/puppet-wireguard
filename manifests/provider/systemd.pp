@@ -21,11 +21,11 @@ define wireguard::provider::systemd (
   systemd::network { "${interface}.netdev":
     ensure          => $systemd_ensure,
     content         => epp("${module_name}/netdev.epp", {
-      'interface'   => $interface,
-      'dport'       => $dport,
-      'description' => $description,
-      'mtu'         => $mtu,
-      'peers'       => $peers,
+        'interface'   => $interface,
+        'dport'       => $dport,
+        'description' => $description,
+        'mtu'         => $mtu,
+        'peers'       => $peers,
     }),
     restart_service => true,
     owner           => 'root',
