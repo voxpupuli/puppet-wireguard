@@ -1,4 +1,4 @@
-#
+# @summary Manage the wg quick components of a wireguard setup
 # @api private
 #
 define wireguard::provider::wgquick (
