@@ -2,6 +2,7 @@
 # @summary manages a wireguard setup
 #
 # @param interface the title of the defined resource, will be used for the wg interface
+# @param ensure will ensure that the files for the provider will be present or absent
 # @param input_interface ethernet interface where the wireguard packages will enter the system, used for firewall rules
 # @param manage_firewall if true, a ferm rule will be created
 # @param dport destination for firewall rules / where our wg instance will listen on. defaults to the last digits from the title
@@ -17,6 +18,7 @@
 # @param routes different routes for the systemd-networkd configuration
 # @param private_key Define private key which should be used for this interface, if not provided a private key will be generated
 # @param preshared_key Define preshared key for the remote peer
+# @param provider The specific backend to use for this `wireguard::interface` resource
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 # @author Sebastian Rakel <sebastian@devunit.eu>
@@ -78,6 +80,7 @@
 #  }
 #
 define wireguard::interface (
+  Enum['present', 'absent'] $ensure = 'present',
   Wireguard::Peers $peers = [],
   Optional[String[1]] $endpoint = undef,
   Integer[0, 65535] $persistent_keepalive = 0,
@@ -94,6 +97,7 @@ define wireguard::interface (
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
   Optional[String[1]] $private_key = undef,
   Optional[String[1]] $preshared_key = undef,
+  Enum['systemd', 'wgquick'] $provider = 'systemd',
 ) {
   require wireguard
 
@@ -172,32 +176,30 @@ define wireguard::interface (
     $peer = []
   }
 
-  systemd::network { "${interface}.netdev":
-    content         => epp("${module_name}/netdev.epp", {
-        'interface'   => $interface,
-        'dport'       => $dport,
-        'description' => $description,
-        'mtu'         => $mtu,
-        'peers'       => $peers + $peer,
-    }),
-    restart_service => true,
-    owner           => 'root',
-    group           => 'systemd-network',
-    mode            => '0440',
-    require         => File["/etc/wireguard/${interface}"],
-  }
-
-  $network_epp_params = {
-    'interface' => $interface,
-    'addresses' => $addresses,
-    'routes'    => $routes,
-  }
-
-  systemd::network { "${interface}.network":
-    content         => epp("${module_name}/network.epp", $network_epp_params),
-    restart_service => true,
-    owner           => 'root',
-    group           => 'systemd-network',
-    mode            => '0440',
+  case $provider {
+    'systemd': {
+      wireguard::provider::systemd { $interface :
+        ensure      => $ensure,
+        interface   => $interface,
+        peers       => $peers + $peer,
+        dport       => $dport,
+        addresses   => $addresses,
+        description => $description,
+        mtu         => $mtu,
+        routes      => $routes,
+      }
+    }
+    'wgquick': {
+      wireguard::provider::wgquick { $interface :
+        ensure    => $ensure,
+        interface => $interface,
+        peers     => $peers + $peer,
+        dport     => $dport,
+        addresses => $addresses,
+      }
+    }
+    default: {
+      fail("provider ${provider} not supported")
+    }
   }
 }

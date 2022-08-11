@@ -1,0 +1,31 @@
+<%- |
+    String[1] $interface,
+    Stdlib::Port $dport,
+    Wireguard::Peers $peers,
+    Array[Hash] $addresses,
+| -%>
+# THIS FILE IS MANAGED BY PUPPET
+[Interface]
+<% $addresses.each |$address| { -%>
+Address = <%= $address['Address'] %>
+<% } -%>
+ListenPort = <%= $dport %>
+PostUp = wg set %i private-key /etc/wireguard/<%= $interface %>
+<% $peers.each |$peer| { -%>
+
+<% if $peer['description'] { -%>
+# <%= $peer['description'] %>
+<% } -%>
+[Peer]
+PublicKey=<%= $peer['public_key'] %>
+<% if $peer['endpoint'] { -%>
+Endpoint=<%= $peer['endpoint'] %>
+<% } -%>
+<% if $peer['preshared_key'] { -%>
+PresharedKey=<%= $peer['preshared_key'] %>
+<% } -%>
+PersistentKeepalive=<%= pick($peer['persistent_keepalive'], 0) %>
+<% pick($peer['allowed_ips'], ['fe80::/64', 'fd00::/8', '0.0.0.0/0']).each |$allowed_ip| { -%>
+AllowedIPs=<%= $allowed_ip %>
+<% } -%>
+<% } -%>
