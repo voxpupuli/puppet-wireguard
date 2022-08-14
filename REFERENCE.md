@@ -10,7 +10,14 @@
 
 ### Defined types
 
+#### Public Defined types
+
 * [`wireguard::interface`](#wireguardinterface): manages a wireguard setup
+
+#### Private Defined types
+
+* `wireguard::provider::systemd`: Manage the systemd components of a wireguard setup
+* `wireguard::provider::wgquick`: Manage the wg quick components of a wireguard setup
 
 ### Data types
 
@@ -131,7 +138,6 @@ wireguard::interface {'as2273':
 wireguard::interface {'as3668-2':
   source_addresses      => ['144.76.249.220', '2a01:4f8:171:1152::12'],
   public_key            => 'Tci/bHoPCjTpYv8bw17xQ7P4OdqzGpEN+NDueNjUvBA=',
-  preshared_key         => '/22q9I+RpWRsU+zshW8skv1p00TvnEE6fTvPJuI2Cp4=',
   endpoint              => 'router02.bastelfreak.org:1338',
   dport                 => 1338,
   input_interface       => $facts['networking']['primary'],
@@ -141,7 +147,7 @@ wireguard::interface {'as3668-2':
   mtu                   => 1412,
 ```
 
-##### create a wireguard interface with multiple peers
+##### create a wireguard interface with multiple peers where one uses a preshared key
 
 ```puppet
 wireguard::interface { 'wg0':
@@ -150,6 +156,7 @@ wireguard::interface { 'wg0':
   peers     => [
     {
        public_key  => 'foo==',
+       preshared_key => '/22q9I+RpWRsU+zshW8skv1p00TvnEE6fTvPJuI2Cp4=',
        allowed_ips => ['192.0.2.2'],
     },
     {
@@ -165,6 +172,7 @@ wireguard::interface { 'wg0':
 The following parameters are available in the `wireguard::interface` defined type:
 
 * [`interface`](#interface)
+* [`ensure`](#ensure)
 * [`input_interface`](#input_interface)
 * [`manage_firewall`](#manage_firewall)
 * [`dport`](#dport)
@@ -180,6 +188,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`routes`](#routes)
 * [`private_key`](#private_key)
 * [`preshared_key`](#preshared_key)
+* [`provider`](#provider)
 
 ##### <a name="interface"></a>`interface`
 
@@ -188,6 +197,14 @@ Data type: `String[1]`
 the title of the defined resource, will be used for the wg interface
 
 Default value: `$title`
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+will ensure that the files for the provider will be present or absent
+
+Default value: `'present'`
 
 ##### <a name="input_interface"></a>`input_interface`
 
@@ -305,9 +322,17 @@ Default value: ``undef``
 
 Data type: `Optional[String[1]]`
 
-Define preshared key which should be used for this interface
+Define preshared key for the remote peer
 
 Default value: ``undef``
+
+##### <a name="provider"></a>`provider`
+
+Data type: `Enum['systemd', 'wgquick']`
+
+The specific backend to use for this `wireguard::interface` resource
+
+Default value: `'systemd'`
 
 ## Data types
 
@@ -323,6 +348,7 @@ Alias of
 ```puppet
 Array[Struct[{
     public_key           => String[1],
+    preshared_key        => Optional[String[1]],
     allowed_ips          => Optional[Array[String[1]]],
     endpoint             => Optional[String[1]],
     persistent_keepalive => Optional[Stdlib::Port],
