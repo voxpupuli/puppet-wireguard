@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [Unreleased](https://github.com/voxpupuli/puppet-wireguard/tree/HEAD)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v1.1.0...HEAD)
+
+**Breaking changes:**
+
+- Move preshared\_key from interface to peer configuration [\#51](https://github.com/voxpupuli/puppet-wireguard/pull/51) ([hashworks](https://github.com/hashworks))
+
+**Implemented enhancements:**
+
+- Add wg quick as another provider for interfaces [\#54](https://github.com/voxpupuli/puppet-wireguard/pull/54) ([sebastianrakel](https://github.com/sebastianrakel))
+
+**Fixed bugs:**
+
+- Throw warning instead of fail if peers is empty  [\#55](https://github.com/voxpupuli/puppet-wireguard/pull/55) ([sebastianrakel](https://github.com/sebastianrakel))
+
 ## [v1.1.0](https://github.com/voxpupuli/puppet-wireguard/tree/v1.1.0) (2022-08-03)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v1.0.0...v1.1.0)
