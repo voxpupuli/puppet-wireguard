@@ -102,7 +102,7 @@ define wireguard::interface (
   require wireguard
 
   if empty($peers) and !$public_key {
-    fail('peers or public_key have to been set')
+    warning('peers or public_key have to been set')
   }
 
   if $manage_firewall {
