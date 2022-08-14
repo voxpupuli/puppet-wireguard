@@ -1,6 +1,6 @@
 {
   "name": "puppet-wireguard",
-  "version": "2.0.0",
+  "version": "2.0.1-rc0",
   "author": "Vox Pupuli",
   "summary": "installs, configures, and manages wireguard",
   "license": "AGPL-3.0",
