@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.0.1](https://github.com/voxpupuli/puppet-wireguard/tree/v2.0.1) (2022-08-15)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v2.0.0...v2.0.1)
+
+**Fixed bugs:**
+
+- \(\#52\) Fix dependency cycle [\#53](https://github.com/voxpupuli/puppet-wireguard/pull/53) ([silug](https://github.com/silug))
+
+**Closed issues:**
+
+- Setting wireguard::interaces causes a dependency cycle [\#52](https://github.com/voxpupuli/puppet-wireguard/issues/52)
+
+**Merged pull requests:**
+
+- Release 2.0.0 [\#57](https://github.com/voxpupuli/puppet-wireguard/pull/57) ([sebastianrakel](https://github.com/sebastianrakel))
+
 ## [v2.0.0](https://github.com/voxpupuli/puppet-wireguard/tree/v2.0.0) (2022-08-14)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v1.1.0...v2.0.0)
