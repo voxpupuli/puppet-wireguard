@@ -244,7 +244,7 @@ Data type: `Array[Stdlib::IP::Address]`
 
 array of addresses where the remote peer connects to (our local ips), used for firewalling
 
-Default value: `[$facts['networking']['ip'], $facts['networking']['ip6'],]`
+Default value: `delete_undef_values([$facts['networking']['ip'], $facts['networking']['ip6'],])`
 
 ##### <a name="public_key"></a>`public_key`
 
