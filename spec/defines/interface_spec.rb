@@ -336,6 +336,36 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf") }
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
+
+      context 'with required params and defined private key and without firewall rules and with configured addresses with dns' do
+        let :params do
+          {
+            public_key: 'blabla==',
+            private_key: 'gFYpkdIuGG3EhXKdGmuMJs/3rp/88wkFv2Go+shtu08=',
+            endpoint: 'wireguard.example.com:1234',
+            manage_firewall: false,
+            # we need to set destination_addresses to overwrite the default
+            # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
+            destination_addresses: [facts[:networking]['ip'],],
+            addresses: [{ 'Address' => '192.168.218.87/32', 'DNS' => '192.168.218.1', 'Peer' => '172.20.53.97/32' }, { 'Address' => 'fe80::ade1/64', },],
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_class('wireguard') }
+        it { is_expected.not_to contain_exec("generate private key #{title}") }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}").with_content('gFYpkdIuGG3EhXKdGmuMJs/3rp/88wkFv2Go+shtu08=') }
+        it { is_expected.to contain_exec("generate public key #{title}") }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.pub") }
+        it { is_expected.to contain_systemd__network("#{title}.netdev") }
+        it { is_expected.to contain_systemd__network("#{title}.network") }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{[Address]}) } # rubocop:disable Lint/DuplicateRegexpCharacterClassElement
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=192.168.218.87/32}) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{DNS=192.168.218.1}) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Peer=172.20.53.97/32}) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=fe80::ade1/64}) }
+        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
+      end
     end
   end
 end

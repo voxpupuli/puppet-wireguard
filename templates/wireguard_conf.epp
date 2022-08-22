@@ -7,7 +7,7 @@
 # THIS FILE IS MANAGED BY PUPPET
 [Interface]
 <% $addresses.each |$address| { -%>
-Address = <%= $address['Address'] %>
+<%= $key %>=<%= $value %>
 <% } -%>
 ListenPort = <%= $dport %>
 PostUp = wg set %i private-key /etc/wireguard/<%= $interface %>
