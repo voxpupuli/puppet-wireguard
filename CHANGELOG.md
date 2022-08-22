@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.0.4](https://github.com/voxpupuli/puppet-wireguard/tree/v2.0.4) (2022-08-22)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v2.0.2...v2.0.4)
+
+**Fixed bugs:**
+
+- Fix $addresses hash needs to accept any type of v4 or v6 address [\#61](https://github.com/voxpupuli/puppet-wireguard/pull/61) ([sebastianrakel](https://github.com/sebastianrakel))
+
 ## [v2.0.2](https://github.com/voxpupuli/puppet-wireguard/tree/v2.0.2) (2022-08-17)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v2.0.1...v2.0.2)
