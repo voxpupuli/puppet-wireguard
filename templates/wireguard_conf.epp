@@ -5,9 +5,12 @@
     Array[Hash] $addresses,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
-[Interface]
 <% $addresses.each |$address| { -%>
+
+[Interface]
+<% $address.each |$key, $value| { -%>
 <%= $key %>=<%= $value %>
+<% } -%>
 <% } -%>
 ListenPort = <%= $dport %>
 PostUp = wg set %i private-key /etc/wireguard/<%= $interface %>
