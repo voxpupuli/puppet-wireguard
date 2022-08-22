@@ -264,7 +264,7 @@ Default value: ``undef``
 
 ##### <a name="addresses"></a>`addresses`
 
-Data type: `Array[Hash[String,Variant[Stdlib::IP::Address::V4::CIDR,Stdlib::IP::Address::V6::CIDR]]]`
+Data type: `Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]]`
 
 different addresses for the systemd-networkd configuration
 
