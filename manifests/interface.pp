@@ -90,7 +90,7 @@ define wireguard::interface (
   String[1] $input_interface = $facts['networking']['primary'],
   Boolean $manage_firewall = true,
   Array[Stdlib::IP::Address] $source_addresses = [],
-  Array[Hash[String,Variant[Stdlib::IP::Address::V4::CIDR,Stdlib::IP::Address::V6::CIDR]]] $addresses = [],
+  Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $addresses = [],
   Optional[String[1]] $description = undef,
   Optional[Integer[1280, 9000]] $mtu = undef,
   Optional[String[1]] $public_key = undef,

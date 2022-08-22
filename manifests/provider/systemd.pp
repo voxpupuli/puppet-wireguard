@@ -6,7 +6,7 @@ define wireguard::provider::systemd (
   Enum['present', 'absent'] $ensure = 'present',
   Wireguard::Peers $peers = [],
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
-  Array[Hash[String,Variant[Stdlib::IP::Address::V4::CIDR,Stdlib::IP::Address::V6::CIDR]]] $addresses = [],
+  Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $addresses = [],
   Optional[String[1]] $description = undef,
   Optional[Integer[1280, 9000]] $mtu = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
