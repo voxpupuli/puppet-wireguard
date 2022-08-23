@@ -373,8 +373,6 @@ describe 'wireguard::interface', type: :define do
             public_key: 'blabla==',
             endpoint: 'wireguard.example.com:1234',
             manage_firewall: false,
-            # we need to set destination_addresses to overwrite the default
-            # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
             destination_addresses: [facts[:networking]['ip'],],
             provider: 'wgquick',
             addresses: [{ 'Address' => '192.168.218.87/32', 'DNS' => '192.168.218.1' }],
@@ -391,6 +389,38 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{[Interface]}) } # rubocop:disable Lint/DuplicateRegexpCharacterClassElement
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{Address=192.168.218.87/32}) }
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{DNS=192.168.218.1}) }
+        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
+      end
+
+      context 'wgquick with postup and predown commands and without firewall' do
+        let :params do
+          {
+            public_key: 'blabla==',
+            endpoint: 'wireguard.example.com:1234',
+            manage_firewall: false,
+            destination_addresses: [facts[:networking]['ip'],],
+            provider: 'wgquick',
+            addresses: [{ 'Address' => '192.168.218.87/32' }],
+            postup_cmds: [
+              'resolvectl dns %i 10.34.3.1; resolvectl domain %i "~hello"',
+            ],
+            predown_cmds: [
+              'resolvectl revert %i',
+            ],
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_class('wireguard') }
+        it { is_expected.to contain_exec("generate private key #{title}") }
+        it { is_expected.to contain_exec("generate public key #{title}") }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.pub") }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}") }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.conf") }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{[Interface]}) } # rubocop:disable Lint/DuplicateRegexpCharacterClassElement
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{Address=192.168.218.87/32}) }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{PostUp=resolvectl dns %i 10.34.3.1; resolvectl domain %i "~hello"}) }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{PreDown=resolvectl revert %i}) }
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
     end
