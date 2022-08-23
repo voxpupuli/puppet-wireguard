@@ -19,6 +19,10 @@
 # @param private_key Define private key which should be used for this interface, if not provided a private key will be generated
 # @param preshared_key Define preshared key for the remote peer
 # @param provider The specific backend to use for this `wireguard::interface` resource
+# @param preup_cmds is an array of commands which should run as preup command (only supported by wgquick)
+# @param postup_cmds is an array of commands which should run as preup command (only supported by wgquick)
+# @param predown_cmds is an array of commands which should run as preup command (only supported by wgquick)
+# @param postdown_cmds is an array of commands which should run as preup command (only supported by wgquick)
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 # @author Sebastian Rakel <sebastian@devunit.eu>
@@ -98,6 +102,10 @@ define wireguard::interface (
   Optional[String[1]] $private_key = undef,
   Optional[String[1]] $preshared_key = undef,
   Enum['systemd', 'wgquick'] $provider = 'systemd',
+  Array[String[1]] $preup_cmds = [],
+  Array[String[1]] $postup_cmds = [],
+  Array[String[1]] $predown_cmds = [],
+  Array[String[1]] $postdown_cmds = [],
 ) {
   include wireguard
 
@@ -178,6 +186,22 @@ define wireguard::interface (
 
   case $provider {
     'systemd': {
+      if !empty($preup_cmds) {
+        warning('PreUp commands are not supported by systemd-networkd')
+      }
+
+      if !empty($postup_cmds) {
+        warning('PostUp commands are not supported by systemd-networkd')
+      }
+
+      if !empty($predown_cmds) {
+        warning('PreDown commands are not supported by systemd-networkd')
+      }
+
+      if !empty($postdown_cmds) {
+        warning('PostDown commands are not supported by systemd-networkd')
+      }
+
       wireguard::provider::systemd { $interface :
         ensure      => $ensure,
         interface   => $interface,
@@ -191,11 +215,15 @@ define wireguard::interface (
     }
     'wgquick': {
       wireguard::provider::wgquick { $interface :
-        ensure    => $ensure,
-        interface => $interface,
-        peers     => $peers + $peer,
-        dport     => $dport,
-        addresses => $addresses,
+        ensure        => $ensure,
+        interface     => $interface,
+        peers         => $peers + $peer,
+        dport         => $dport,
+        addresses     => $addresses,
+        preup_cmds    => $preup_cmds,
+        postup_cmds   => $postup_cmds,
+        predown_cmds  => $predown_cmds,
+        postdown_cmds => $postdown_cmds,
       }
     }
     default: {

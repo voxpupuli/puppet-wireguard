@@ -7,13 +7,21 @@ define wireguard::provider::wgquick (
   Wireguard::Peers $peers = [],
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
   Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $addresses = [],
+  Array[String[1]] $preup_cmds = [],
+  Array[String[1]] $postup_cmds = [],
+  Array[String[1]] $predown_cmds = [],
+  Array[String[1]] $postdown_cmds = [],
 ) {
   assert_private()
   $params = {
-    'interface' => $interface,
-    'dport'     => $dport,
-    'peers'     => $peers,
-    'addresses' => $addresses,
+    'interface'     => $interface,
+    'dport'         => $dport,
+    'peers'         => $peers,
+    'addresses'     => $addresses,
+    'preup_cmds'    => $preup_cmds,
+    'postup_cmds'   => $postup_cmds,
+    'predown_cmds'  => $predown_cmds,
+    'postdown_cmds' => $postdown_cmds,
   }
 
   file { "/etc/wireguard/${interface}.conf":

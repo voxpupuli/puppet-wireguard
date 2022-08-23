@@ -3,6 +3,10 @@
     Stdlib::Port $dport,
     Wireguard::Peers $peers,
     Array[Hash] $addresses,
+    Array[String[1]] $preup_cmds,
+    Array[String[1]] $postup_cmds,
+    Array[String[1]] $predown_cmds,
+    Array[String[1]] $postdown_cmds,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
 <% $addresses.each |$address| { -%>
@@ -12,8 +16,21 @@
 <%= $key %>=<%= $value %>
 <% } -%>
 <% } -%>
-ListenPort = <%= $dport %>
-PostUp = wg set %i private-key /etc/wireguard/<%= $interface %>
+ListenPort=<%= $dport %>
+<% $preup_cmds.each |$cmd| { -%>
+PreUp=<%= $cmd %>
+<% } -%>
+PostUp=wg set %i private-key /etc/wireguard/<%= $interface %>
+<% $postup_cmds.each |$cmd| { -%>
+PostUp=<%= $cmd %>
+<% } -%>
+<% $predown_cmds.each |$cmd| { -%>
+PreDown=<%= $cmd %>
+<% } -%>
+<% $postdown_cmds.each |$cmd| { -%>
+PostDown=<%= $cmd %>
+<% } -%>
+
 <% $peers.each |$peer| { -%>
 
 <% if $peer['description'] { -%>
