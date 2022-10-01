@@ -189,6 +189,10 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`private_key`](#private_key)
 * [`preshared_key`](#preshared_key)
 * [`provider`](#provider)
+* [`preup_cmds`](#preup_cmds)
+* [`postup_cmds`](#postup_cmds)
+* [`predown_cmds`](#predown_cmds)
+* [`postdown_cmds`](#postdown_cmds)
 
 ##### <a name="interface"></a>`interface`
 
@@ -333,6 +337,38 @@ Data type: `Enum['systemd', 'wgquick']`
 The specific backend to use for this `wireguard::interface` resource
 
 Default value: `'systemd'`
+
+##### <a name="preup_cmds"></a>`preup_cmds`
+
+Data type: `Array[String[1]]`
+
+is an array of commands which should run as preup command (only supported by wgquick)
+
+Default value: `[]`
+
+##### <a name="postup_cmds"></a>`postup_cmds`
+
+Data type: `Array[String[1]]`
+
+is an array of commands which should run as preup command (only supported by wgquick)
+
+Default value: `[]`
+
+##### <a name="predown_cmds"></a>`predown_cmds`
+
+Data type: `Array[String[1]]`
+
+is an array of commands which should run as preup command (only supported by wgquick)
+
+Default value: `[]`
+
+##### <a name="postdown_cmds"></a>`postdown_cmds`
+
+Data type: `Array[String[1]]`
+
+is an array of commands which should run as preup command (only supported by wgquick)
+
+Default value: `[]`
 
 ## Data types
 
