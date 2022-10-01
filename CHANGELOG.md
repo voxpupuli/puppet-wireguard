@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.1.0](https://github.com/voxpupuli/puppet-wireguard/tree/v2.1.0) (2022-10-01)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v2.0.4...v2.1.0)
+
+**Implemented enhancements:**
+
+- Add pre/post up/down commands for wgquick [\#66](https://github.com/voxpupuli/puppet-wireguard/pull/66) ([sebastianrakel](https://github.com/sebastianrakel))
+
 ## [v2.0.4](https://github.com/voxpupuli/puppet-wireguard/tree/v2.0.4) (2022-08-22)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v2.0.3...v2.0.4)
