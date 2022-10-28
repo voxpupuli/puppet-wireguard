@@ -83,6 +83,14 @@
 #    ],
 #  }
 #
+# @example create two sides of a session using the public key from the other side
+#  wireguard::interface { 'wg0':
+#    source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
+#    public_key       => $facts['wireguard_pubkeys']['nodeB'],
+#    endpoint         => 'nodeB.example.com:53668',
+#    addresses        => [{'Address' => '192.168.123.6/30',},{'Address' => 'fe80::beef:1/64'},],
+#  }
+#
 define wireguard::interface (
   Enum['present', 'absent'] $ensure = 'present',
   Wireguard::Peers $peers = [],

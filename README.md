@@ -25,10 +25,13 @@ This is enabled by default but can be disabled by setting the `manage_firewall`
 parameter to false in the `wireguard::interface` defined resource. You need to
 have the `ferm` class in your catalog to use the feature.
 
-This module uses [systemd-networkd](https://www.freedesktop.org/software/systemd/man/systemd-networkd.html).
-You need to have a systemd-networkd service resource in your catalog. We recommend
-[voxpupuli/systemd](https://github.com/voxpupuli/puppet-systemd#systemd) with
-`manage_networkd` set to true.
+This module can uses [systemd-networkd](https://www.freedesktop.org/software/systemd/man/systemd-networkd.html) or [wg-quick](https://manpages.debian.org/wg-quick) to
+configure tunnels. For the former, you need to have a systemd-networkd
+service resource in your catalog. We recommend [voxpupuli/systemd](https://github.com/voxpupuli/puppet-systemd#systemd)
+with `manage_networkd` set to true. You do not need to configure your
+entire network with `systemd-networkd`, only the tunnels. That said,
+`wg-quick` might be better a better match if you do not want to touch
+`systemd`.
 
 Furthermore, this module assumes that you've a dualstack machine. Your IPv4 and
 IPv6 addresses will be automatically set to the `destination_addresses` array
@@ -79,6 +82,8 @@ wireguard::interface {'as1234':
   addresses       => [{'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32'}, {'Address' => 'fe80::ade1/64',},],
 }
 ````
+
+More examples are available in the [REFERENCE.md](./REFERENCE.md) file.
 
 ## Parameter reference
 
