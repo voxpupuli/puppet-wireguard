@@ -83,6 +83,8 @@ wireguard::interface {'as1234':
 }
 ````
 
+More examples are available in the [REFERENCE.md](./REFERENCE.md) file.
+
 ## Parameter reference
 
 All parameters are documented with puppet-strings. You can view the
