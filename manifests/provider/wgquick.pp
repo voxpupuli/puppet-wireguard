@@ -6,6 +6,7 @@ define wireguard::provider::wgquick (
   Enum['present', 'absent'] $ensure = 'present',
   Wireguard::Peers $peers = [],
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
+  Optional[Integer[0,4294967295]] $firewall_mark = undef,
   Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $addresses = [],
   Array[String[1]] $preup_cmds = [],
   Array[String[1]] $postup_cmds = [],
@@ -16,6 +17,7 @@ define wireguard::provider::wgquick (
   $params = {
     'interface'     => $interface,
     'dport'         => $dport,
+    'firewall_mark' => $firewall_mark,
     'peers'         => $peers,
     'addresses'     => $addresses,
     'preup_cmds'    => $preup_cmds,

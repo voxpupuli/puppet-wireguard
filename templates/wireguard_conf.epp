@@ -1,6 +1,7 @@
 <%- |
     String[1] $interface,
     Stdlib::Port $dport,
+    Optional[Integer] $firewall_mark,
     Wireguard::Peers $peers,
     Array[Hash] $addresses,
     Array[String[1]] $preup_cmds,
@@ -17,6 +18,9 @@
 <% } -%>
 <% } -%>
 ListenPort=<%= $dport %>
+<% if $firewall_mark { -%>
+FwMark=<%= $firewall_mark %>
+<% } -%>
 <% $preup_cmds.each |$cmd| { -%>
 PreUp=<%= $cmd %>
 <% } -%>
