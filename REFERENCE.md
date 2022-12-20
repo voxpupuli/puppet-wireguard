@@ -176,6 +176,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`input_interface`](#input_interface)
 * [`manage_firewall`](#manage_firewall)
 * [`dport`](#dport)
+* [`firewall_mark`](#firewall_mark)
 * [`source_addresses`](#source_addresses)
 * [`destination_addresses`](#destination_addresses)
 * [`public_key`](#public_key)
@@ -233,6 +234,14 @@ Data type: `Integer[1024, 65000]`
 destination for firewall rules / where our wg instance will listen on. defaults to the last digits from the title
 
 Default value: `Integer(regsubst($title, '^\D+(\d+)$', '\1'))`
+
+##### <a name="firewall_mark"></a>`firewall_mark`
+
+Data type: `Integer[1, 4294967295]`
+
+netfilter firewall mark to set on outgoing packages from this wireguard interface. Can be used in firewall rules to identify outgoing packets on the main network interface that were produced by this wireguard interface.
+
+Default value: ``undef``
 
 ##### <a name="source_addresses"></a>`source_addresses`
 

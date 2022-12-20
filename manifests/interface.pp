@@ -6,6 +6,7 @@
 # @param input_interface ethernet interface where the wireguard packages will enter the system, used for firewall rules
 # @param manage_firewall if true, a ferm rule will be created
 # @param dport destination for firewall rules / where our wg instance will listen on. defaults to the last digits from the title
+# @param firewall_mark netfilter firewall mark to set on outgoing packages from this wireguard interface
 # @param source_addresses an array of ip addresses from where we receive wireguard connections
 # @param destination_addresses array of addresses where the remote peer connects to (our local ips), used for firewalling
 # @param public_key base64 encoded pubkey from the remote peer
@@ -99,6 +100,7 @@ define wireguard::interface (
   Array[Stdlib::IP::Address] $destination_addresses = delete_undef_values([$facts['networking']['ip'], $facts['networking']['ip6'],]),
   String[1] $interface = $title,
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
+  Optional[Integer[0, 4294967295]] $firewall_mark = undef,
   String[1] $input_interface = $facts['networking']['primary'],
   Boolean $manage_firewall = true,
   Array[Stdlib::IP::Address] $source_addresses = [],
@@ -211,14 +213,15 @@ define wireguard::interface (
       }
 
       wireguard::provider::systemd { $interface :
-        ensure      => $ensure,
-        interface   => $interface,
-        peers       => $peers + $peer,
-        dport       => $dport,
-        addresses   => $addresses,
-        description => $description,
-        mtu         => $mtu,
-        routes      => $routes,
+        ensure        => $ensure,
+        interface     => $interface,
+        peers         => $peers + $peer,
+        dport         => $dport,
+        firewall_mark => $firewall_mark,
+        addresses     => $addresses,
+        description   => $description,
+        mtu           => $mtu,
+        routes        => $routes,
       }
     }
     'wgquick': {
@@ -227,6 +230,7 @@ define wireguard::interface (
         interface     => $interface,
         peers         => $peers + $peer,
         dport         => $dport,
+        firewall_mark => $firewall_mark,
         addresses     => $addresses,
         preup_cmds    => $preup_cmds,
         postup_cmds   => $postup_cmds,

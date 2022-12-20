@@ -1,5 +1,6 @@
 <%- | String[1] $interface,
       Stdlib::Port $dport,
+      Optional[Integer] $firewall_mark,
       Wireguard::Peers $peers,
       Optional[String] $description,
       Optional[Integer] $mtu,
@@ -19,6 +20,9 @@ MTUBytes=<%= $mtu %>
 [WireGuard]
 PrivateKeyFile=/etc/wireguard/<%= $interface %>
 ListenPort=<%= $dport %>
+<% if $firewall_mark { -%>
+FirewallMark=<%= $firewall_mark %>
+<% } -%>
 <% $peers.each |$peer| { -%>
 
 [WireGuardPeer]
