@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.2.0](https://github.com/voxpupuli/puppet-wireguard/tree/v2.2.0) (2022-12-20)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v2.1.0...v2.2.0)
+
+**Implemented enhancements:**
+
+- Add Ubuntu 22.04 support [\#71](https://github.com/voxpupuli/puppet-wireguard/pull/71) ([bastelfreak](https://github.com/bastelfreak))
+- Add a firewall\_mark parameter to wireguard::interface [\#69](https://github.com/voxpupuli/puppet-wireguard/pull/69) ([tobyp](https://github.com/tobyp))
+- add examples, document systemd-networkd and wg-quick [\#68](https://github.com/voxpupuli/puppet-wireguard/pull/68) ([anarcat](https://github.com/anarcat))
+
 ## [v2.1.0](https://github.com/voxpupuli/puppet-wireguard/tree/v2.1.0) (2022-10-01)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v2.0.4...v2.1.0)
