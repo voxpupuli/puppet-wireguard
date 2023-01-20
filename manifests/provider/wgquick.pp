@@ -12,12 +12,14 @@ define wireguard::provider::wgquick (
   Array[String[1]] $postup_cmds = [],
   Array[String[1]] $predown_cmds = [],
   Array[String[1]] $postdown_cmds = [],
+  Optional[Integer[1280, 9000]] $mtu = undef,
 ) {
   assert_private()
   $params = {
     'interface'     => $interface,
     'dport'         => $dport,
     'firewall_mark' => $firewall_mark,
+    'mtu'           => $mtu,
     'peers'         => $peers,
     'addresses'     => $addresses,
     'preup_cmds'    => $preup_cmds,

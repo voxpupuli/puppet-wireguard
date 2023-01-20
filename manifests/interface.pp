@@ -236,6 +236,7 @@ define wireguard::interface (
         postup_cmds   => $postup_cmds,
         predown_cmds  => $predown_cmds,
         postdown_cmds => $postdown_cmds,
+        mtu           => $mtu,
       }
     }
     default: {
