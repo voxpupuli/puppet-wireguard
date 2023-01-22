@@ -424,6 +424,32 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
 
+      context 'wgquick with mtu and without firewall' do
+        let :params do
+          {
+            public_key: 'blabla==',
+            endpoint: 'wireguard.example.com:1234',
+            manage_firewall: false,
+            destination_addresses: [facts[:networking]['ip'],],
+            provider: 'wgquick',
+            addresses: [{ 'Address' => '192.168.218.87/32' }],
+            mtu: 1280,
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_class('wireguard') }
+        it { is_expected.to contain_exec("generate private key #{title}") }
+        it { is_expected.to contain_exec("generate public key #{title}") }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.pub") }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}") }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.conf") }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{[Interface]}) } # rubocop:disable Lint/DuplicateRegexpCharacterClassElement
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{Address=192.168.218.87/32}) }
+        it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{MTU=1280}) }
+        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
+      end
+
       context 'with required params and firewall mark and without firewall rules' do
         let :params do
           {
