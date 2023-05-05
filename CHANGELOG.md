@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.0.0](https://github.com/voxpupuli/puppet-wireguard/tree/v3.0.0) (2023-05-05)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v2.2.0...v3.0.0)
+
+**Breaking changes:**
+
+- Drop Puppet 6 support [\#77](https://github.com/voxpupuli/puppet-wireguard/pull/77) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Change mtu to Integer\[1200,9000\] [\#78](https://github.com/voxpupuli/puppet-wireguard/pull/78) ([sebastianrakel](https://github.com/sebastianrakel))
+- bump puppet/systemd to \< 5.0.0 [\#74](https://github.com/voxpupuli/puppet-wireguard/pull/74) ([jhoblitt](https://github.com/jhoblitt))
+- Add mtu to wg-quick [\#73](https://github.com/voxpupuli/puppet-wireguard/pull/73) ([sebastianrakel](https://github.com/sebastianrakel))
+
+**Closed issues:**
+
+- Persistent keepalive setting not configured on simple interface with systemd-networkd provider [\#75](https://github.com/voxpupuli/puppet-wireguard/issues/75)
+
 ## [v2.2.0](https://github.com/voxpupuli/puppet-wireguard/tree/v2.2.0) (2022-12-20)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v2.1.0...v2.2.0)
