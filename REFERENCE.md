@@ -312,7 +312,7 @@ Default value: `undef`
 
 ##### <a name="-wireguard--interface--mtu"></a>`mtu`
 
-Data type: `Optional[Integer[1280, 9000]]`
+Data type: `Optional[Integer[1200, 9000]]`
 
 configure the MTU (maximum transision unit) for the wireguard tunnel. By default linux will figure this out. You might need to lower it if you're connection through a DSL line. MTU needs to be equal on both tunnel endpoints
 
