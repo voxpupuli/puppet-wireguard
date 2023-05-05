@@ -9,7 +9,7 @@ define wireguard::provider::systemd (
   Optional[Integer[0,4294967295]] $firewall_mark = undef,
   Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $addresses = [],
   Optional[String[1]] $description = undef,
-  Optional[Integer[1280, 9000]] $mtu = undef,
+  Optional[Integer[1200, 9000]] $mtu = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
 ) {
   assert_private()

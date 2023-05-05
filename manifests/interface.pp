@@ -106,7 +106,7 @@ define wireguard::interface (
   Array[Stdlib::IP::Address] $source_addresses = [],
   Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $addresses = [],
   Optional[String[1]] $description = undef,
-  Optional[Integer[1280, 9000]] $mtu = undef,
+  Optional[Integer[1200, 9000]] $mtu = undef,
   Optional[String[1]] $public_key = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
   Optional[String[1]] $private_key = undef,
