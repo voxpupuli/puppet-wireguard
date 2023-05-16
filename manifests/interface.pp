@@ -105,6 +105,7 @@ define wireguard::interface (
   Boolean $manage_firewall = true,
   Array[Stdlib::IP::Address] $source_addresses = [],
   Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $addresses = [],
+  Optional[Array[Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $allowed_ips = [],
   Optional[String[1]] $description = undef,
   Optional[Integer[1200, 9000]] $mtu = undef,
   Optional[String[1]] $public_key = undef,
@@ -243,4 +244,20 @@ define wireguard::interface (
       fail("provider ${provider} not supported")
     }
   }
+  if $facts['wireguard_pubkeys'][$interface] {
+    $peer_params = {
+      'description'          => $description,
+      'public_key'           => $facts['wireguard_pubkeys'][$interface],
+      'endpoint'             => "${facts['fqdn']}:${dport}",
+      'allowed_ips'          => $allowed_ips,
+      'preshared_key'        => $preshared_key,
+      'persistent_keepalive' => $persistent_keepalive,
+      'interface'            => $interface,
+      'tag'                  => "wireguard-${interface}"
+    }
+    @@wireguard::peer { "${facts['fqdn']}-${interface}-peer":
+      * => $peer_params,
+    }
+  }
+  Wireguard::Peer <<| tag == "wireguard-${interface}" |>>
 }
