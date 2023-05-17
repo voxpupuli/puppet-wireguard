@@ -1,3 +1,13 @@
+# @summary define a wireguard peer
+#
+# @param interface the title of the defined resource, will be used for the targetted wg interface
+# @param description provide some identification details about the peer
+# @param public_key base64 encoded pubkey from the remote peer
+# @param endpoint fqdn:port or ip:port where we connect to
+# @param allowed_ips different addresses that should be routed to this peer
+# @param preshared_key Define preshared key for the remote peer
+# @param persistent_keepalive is set to 1 or greater, that's the interval in seconds wireguard sends a keepalive to the other peer(s). Useful if the sender is behind a NAT gateway or has a dynamic ip address
+#
 define wireguard::peer (
   String $interface,
   Optional[String] $description = undef,

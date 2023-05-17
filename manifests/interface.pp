@@ -24,6 +24,7 @@
 # @param postup_cmds is an array of commands which should run as preup command (only supported by wgquick)
 # @param predown_cmds is an array of commands which should run as preup command (only supported by wgquick)
 # @param postdown_cmds is an array of commands which should run as preup command (only supported by wgquick)
+# @param allowed_ips different addresses that should be routed to this peer
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 # @author Sebastian Rakel <sebastian@devunit.eu>
