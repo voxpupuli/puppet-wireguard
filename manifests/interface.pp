@@ -245,19 +245,21 @@ define wireguard::interface (
       fail("provider ${provider} not supported")
     }
   }
-  if $facts['wireguard_pubkeys'][$interface] {
-    $peer_params = {
-      'description'          => $description,
-      'public_key'           => $facts['wireguard_pubkeys'][$interface],
-      'endpoint'             => "${facts['fqdn']}:${dport}",
-      'allowed_ips'          => $allowed_ips,
-      'preshared_key'        => $preshared_key,
-      'persistent_keepalive' => $persistent_keepalive,
-      'interface'            => $interface,
-      'tag'                  => "wireguard-${interface}"
-    }
-    @@wireguard::peer { "${facts['fqdn']}-${interface}-peer":
-      * => $peer_params,
+  if 'wireguard_pubkeys' in $facts {
+    if $interface in $facts['wireguard_pubkeys'] {
+      $peer_params = {
+        'description'          => $description,
+        'public_key'           => $facts['wireguard_pubkeys'][$interface],
+        'endpoint'             => "${facts['fqdn']}:${dport}",
+        'allowed_ips'          => $allowed_ips,
+        'preshared_key'        => $preshared_key,
+        'persistent_keepalive' => $persistent_keepalive,
+        'interface'            => $interface,
+        'tag'                  => "wireguard-${interface}"
+      }
+      @@wireguard::peer { "${facts['fqdn']}-${interface}-peer":
+        * => $peer_params,
+      }
     }
   }
   Wireguard::Peer <<| tag == "wireguard-${interface}" |>>
