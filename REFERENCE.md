@@ -12,7 +12,8 @@
 
 #### Public Defined types
 
-* [`wireguard::interface`](#wireguard--interface): manages a wireguard setup
+* [`wireguard::interface`](#wireguardinterface): manages a wireguard setup
+* [`wireguard::peer`](#wireguardpeer): define a wireguard peer
 
 #### Private Defined types
 
@@ -21,7 +22,7 @@
 
 ### Data types
 
-* [`Wireguard::Peers`](#Wireguard--Peers): custom data type for an array with wireguard peers
+* [`Wireguard::Peers`](#wireguardpeers): custom data type for an array with wireguard peers
 
 ## Classes
 
@@ -33,22 +34,22 @@ manages the wireguard package
 
 The following parameters are available in the `wireguard` class:
 
-* [`manage_package`](#-wireguard--manage_package)
-* [`package_name`](#-wireguard--package_name)
-* [`package_ensure`](#-wireguard--package_ensure)
-* [`config_directory`](#-wireguard--config_directory)
-* [`purge_unknown_keys`](#-wireguard--purge_unknown_keys)
-* [`interfaces`](#-wireguard--interfaces)
+* [`manage_package`](#manage_package)
+* [`package_name`](#package_name)
+* [`package_ensure`](#package_ensure)
+* [`config_directory`](#config_directory)
+* [`purge_unknown_keys`](#purge_unknown_keys)
+* [`interfaces`](#interfaces)
 
-##### <a name="-wireguard--manage_package"></a>`manage_package`
+##### <a name="manage_package"></a>`manage_package`
 
 Data type: `Boolean`
 
 if the package should be managed or not
 
-Default value: `true`
+Default value: ``true``
 
-##### <a name="-wireguard--package_name"></a>`package_name`
+##### <a name="package_name"></a>`package_name`
 
 Data type: `String[1]`
 
@@ -56,7 +57,7 @@ the name of the package
 
 Default value: `'wireguard-tools'`
 
-##### <a name="-wireguard--package_ensure"></a>`package_ensure`
+##### <a name="package_ensure"></a>`package_ensure`
 
 Data type: `Enum['installed', 'latest', 'absent']`
 
@@ -64,7 +65,7 @@ the ensure state of the package
 
 Default value: `'installed'`
 
-##### <a name="-wireguard--config_directory"></a>`config_directory`
+##### <a name="config_directory"></a>`config_directory`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -72,15 +73,15 @@ the path to the wireguard directory
 
 Default value: `'/etc/wireguard'`
 
-##### <a name="-wireguard--purge_unknown_keys"></a>`purge_unknown_keys`
+##### <a name="purge_unknown_keys"></a>`purge_unknown_keys`
 
 Data type: `Boolean`
 
 by default Puppet will purge unknown wireguard keys from `$config_directory`
 
-Default value: `true`
+Default value: ``true``
 
-##### <a name="-wireguard--interfaces"></a>`interfaces`
+##### <a name="interfaces"></a>`interfaces`
 
 Data type: `Hash[String[1], Any]`
 
@@ -90,7 +91,7 @@ Default value: `{}`
 
 ## Defined types
 
-### <a name="wireguard--interface"></a>`wireguard::interface`
+### <a name="wireguardinterface"></a>`wireguard::interface`
 
 }
 
@@ -182,31 +183,32 @@ wireguard::interface { 'wg0':
 
 The following parameters are available in the `wireguard::interface` defined type:
 
-* [`interface`](#-wireguard--interface--interface)
-* [`ensure`](#-wireguard--interface--ensure)
-* [`input_interface`](#-wireguard--interface--input_interface)
-* [`manage_firewall`](#-wireguard--interface--manage_firewall)
-* [`dport`](#-wireguard--interface--dport)
-* [`firewall_mark`](#-wireguard--interface--firewall_mark)
-* [`source_addresses`](#-wireguard--interface--source_addresses)
-* [`destination_addresses`](#-wireguard--interface--destination_addresses)
-* [`public_key`](#-wireguard--interface--public_key)
-* [`endpoint`](#-wireguard--interface--endpoint)
-* [`addresses`](#-wireguard--interface--addresses)
-* [`persistent_keepalive`](#-wireguard--interface--persistent_keepalive)
-* [`description`](#-wireguard--interface--description)
-* [`mtu`](#-wireguard--interface--mtu)
-* [`peers`](#-wireguard--interface--peers)
-* [`routes`](#-wireguard--interface--routes)
-* [`private_key`](#-wireguard--interface--private_key)
-* [`preshared_key`](#-wireguard--interface--preshared_key)
-* [`provider`](#-wireguard--interface--provider)
-* [`preup_cmds`](#-wireguard--interface--preup_cmds)
-* [`postup_cmds`](#-wireguard--interface--postup_cmds)
-* [`predown_cmds`](#-wireguard--interface--predown_cmds)
-* [`postdown_cmds`](#-wireguard--interface--postdown_cmds)
+* [`interface`](#interface)
+* [`ensure`](#ensure)
+* [`input_interface`](#input_interface)
+* [`manage_firewall`](#manage_firewall)
+* [`dport`](#dport)
+* [`firewall_mark`](#firewall_mark)
+* [`source_addresses`](#source_addresses)
+* [`destination_addresses`](#destination_addresses)
+* [`public_key`](#public_key)
+* [`endpoint`](#endpoint)
+* [`addresses`](#addresses)
+* [`persistent_keepalive`](#persistent_keepalive)
+* [`description`](#description)
+* [`mtu`](#mtu)
+* [`peers`](#peers)
+* [`routes`](#routes)
+* [`private_key`](#private_key)
+* [`preshared_key`](#preshared_key)
+* [`provider`](#provider)
+* [`preup_cmds`](#preup_cmds)
+* [`postup_cmds`](#postup_cmds)
+* [`predown_cmds`](#predown_cmds)
+* [`postdown_cmds`](#postdown_cmds)
+* [`allowed_ips`](#allowed_ips)
 
-##### <a name="-wireguard--interface--interface"></a>`interface`
+##### <a name="interface"></a>`interface`
 
 Data type: `String[1]`
 
@@ -214,7 +216,7 @@ the title of the defined resource, will be used for the wg interface
 
 Default value: `$title`
 
-##### <a name="-wireguard--interface--ensure"></a>`ensure`
+##### <a name="ensure"></a>`ensure`
 
 Data type: `Enum['present', 'absent']`
 
@@ -222,7 +224,7 @@ will ensure that the files for the provider will be present or absent
 
 Default value: `'present'`
 
-##### <a name="-wireguard--interface--input_interface"></a>`input_interface`
+##### <a name="input_interface"></a>`input_interface`
 
 Data type: `String[1]`
 
@@ -230,15 +232,15 @@ ethernet interface where the wireguard packages will enter the system, used for 
 
 Default value: `$facts['networking']['primary']`
 
-##### <a name="-wireguard--interface--manage_firewall"></a>`manage_firewall`
+##### <a name="manage_firewall"></a>`manage_firewall`
 
 Data type: `Boolean`
 
 if true, a ferm rule will be created
 
-Default value: `true`
+Default value: ``true``
 
-##### <a name="-wireguard--interface--dport"></a>`dport`
+##### <a name="dport"></a>`dport`
 
 Data type: `Integer[1024, 65000]`
 
@@ -246,15 +248,15 @@ destination for firewall rules / where our wg instance will listen on. defaults 
 
 Default value: `Integer(regsubst($title, '^\D+(\d+)$', '\1'))`
 
-##### <a name="-wireguard--interface--firewall_mark"></a>`firewall_mark`
+##### <a name="firewall_mark"></a>`firewall_mark`
 
 Data type: `Optional[Integer[0, 4294967295]]`
 
 netfilter firewall mark to set on outgoing packages from this wireguard interface
 
-Default value: `undef`
+Default value: ``undef``
 
-##### <a name="-wireguard--interface--source_addresses"></a>`source_addresses`
+##### <a name="source_addresses"></a>`source_addresses`
 
 Data type: `Array[Stdlib::IP::Address]`
 
@@ -262,7 +264,7 @@ an array of ip addresses from where we receive wireguard connections
 
 Default value: `[]`
 
-##### <a name="-wireguard--interface--destination_addresses"></a>`destination_addresses`
+##### <a name="destination_addresses"></a>`destination_addresses`
 
 Data type: `Array[Stdlib::IP::Address]`
 
@@ -270,23 +272,23 @@ array of addresses where the remote peer connects to (our local ips), used for f
 
 Default value: `delete_undef_values([$facts['networking']['ip'], $facts['networking']['ip6'],])`
 
-##### <a name="-wireguard--interface--public_key"></a>`public_key`
+##### <a name="public_key"></a>`public_key`
 
 Data type: `Optional[String[1]]`
 
 base64 encoded pubkey from the remote peer
 
-Default value: `undef`
+Default value: ``undef``
 
-##### <a name="-wireguard--interface--endpoint"></a>`endpoint`
+##### <a name="endpoint"></a>`endpoint`
 
 Data type: `Optional[String[1]]`
 
 fqdn:port or ip:port where we connect to
 
-Default value: `undef`
+Default value: ``undef``
 
-##### <a name="-wireguard--interface--addresses"></a>`addresses`
+##### <a name="addresses"></a>`addresses`
 
 Data type: `Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]]`
 
@@ -294,7 +296,7 @@ different addresses for the systemd-networkd configuration
 
 Default value: `[]`
 
-##### <a name="-wireguard--interface--persistent_keepalive"></a>`persistent_keepalive`
+##### <a name="persistent_keepalive"></a>`persistent_keepalive`
 
 Data type: `Integer[0, 65535]`
 
@@ -302,23 +304,23 @@ is set to 1 or greater, that's the interval in seconds wireguard sends a keepali
 
 Default value: `0`
 
-##### <a name="-wireguard--interface--description"></a>`description`
+##### <a name="description"></a>`description`
 
 Data type: `Optional[String[1]]`
 
 an optional string that will be added to the wireguard network interface
 
-Default value: `undef`
+Default value: ``undef``
 
-##### <a name="-wireguard--interface--mtu"></a>`mtu`
+##### <a name="mtu"></a>`mtu`
 
 Data type: `Optional[Integer[1200, 9000]]`
 
 configure the MTU (maximum transision unit) for the wireguard tunnel. By default linux will figure this out. You might need to lower it if you're connection through a DSL line. MTU needs to be equal on both tunnel endpoints
 
-Default value: `undef`
+Default value: ``undef``
 
-##### <a name="-wireguard--interface--peers"></a>`peers`
+##### <a name="peers"></a>`peers`
 
 Data type: `Wireguard::Peers`
 
@@ -326,7 +328,7 @@ is an array of struct (Wireguard::Peers) for multiple peers
 
 Default value: `[]`
 
-##### <a name="-wireguard--interface--routes"></a>`routes`
+##### <a name="routes"></a>`routes`
 
 Data type: `Array[Hash[String[1], Variant[String[1], Boolean]]]`
 
@@ -334,23 +336,23 @@ different routes for the systemd-networkd configuration
 
 Default value: `[]`
 
-##### <a name="-wireguard--interface--private_key"></a>`private_key`
+##### <a name="private_key"></a>`private_key`
 
 Data type: `Optional[String[1]]`
 
 Define private key which should be used for this interface, if not provided a private key will be generated
 
-Default value: `undef`
+Default value: ``undef``
 
-##### <a name="-wireguard--interface--preshared_key"></a>`preshared_key`
+##### <a name="preshared_key"></a>`preshared_key`
 
 Data type: `Optional[String[1]]`
 
 Define preshared key for the remote peer
 
-Default value: `undef`
+Default value: ``undef``
 
-##### <a name="-wireguard--interface--provider"></a>`provider`
+##### <a name="provider"></a>`provider`
 
 Data type: `Enum['systemd', 'wgquick']`
 
@@ -358,7 +360,7 @@ The specific backend to use for this `wireguard::interface` resource
 
 Default value: `'systemd'`
 
-##### <a name="-wireguard--interface--preup_cmds"></a>`preup_cmds`
+##### <a name="preup_cmds"></a>`preup_cmds`
 
 Data type: `Array[String[1]]`
 
@@ -366,7 +368,7 @@ is an array of commands which should run as preup command (only supported by wgq
 
 Default value: `[]`
 
-##### <a name="-wireguard--interface--postup_cmds"></a>`postup_cmds`
+##### <a name="postup_cmds"></a>`postup_cmds`
 
 Data type: `Array[String[1]]`
 
@@ -374,7 +376,7 @@ is an array of commands which should run as preup command (only supported by wgq
 
 Default value: `[]`
 
-##### <a name="-wireguard--interface--predown_cmds"></a>`predown_cmds`
+##### <a name="predown_cmds"></a>`predown_cmds`
 
 Data type: `Array[String[1]]`
 
@@ -382,17 +384,89 @@ is an array of commands which should run as preup command (only supported by wgq
 
 Default value: `[]`
 
-##### <a name="-wireguard--interface--postdown_cmds"></a>`postdown_cmds`
+##### <a name="postdown_cmds"></a>`postdown_cmds`
 
 Data type: `Array[String[1]]`
 
 is an array of commands which should run as preup command (only supported by wgquick)
 
 Default value: `[]`
+
+##### <a name="allowed_ips"></a>`allowed_ips`
+
+Data type: `Optional[Array[Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]]`
+
+different addresses that should be routed to this peer
+
+Default value: `[]`
+
+### <a name="wireguardpeer"></a>`wireguard::peer`
+
+define a wireguard peer
+
+#### Parameters
+
+The following parameters are available in the `wireguard::peer` defined type:
+
+* [`interface`](#interface)
+* [`description`](#description)
+* [`public_key`](#public_key)
+* [`endpoint`](#endpoint)
+* [`allowed_ips`](#allowed_ips)
+* [`preshared_key`](#preshared_key)
+* [`persistent_keepalive`](#persistent_keepalive)
+
+##### <a name="interface"></a>`interface`
+
+Data type: `String`
+
+the title of the defined resource, will be used for the targetted wg interface
+
+##### <a name="description"></a>`description`
+
+Data type: `Optional[String]`
+
+provide some identification details about the peer
+
+Default value: ``undef``
+
+##### <a name="public_key"></a>`public_key`
+
+Data type: `String`
+
+base64 encoded pubkey from the remote peer
+
+##### <a name="endpoint"></a>`endpoint`
+
+Data type: `String`
+
+fqdn:port or ip:port where we connect to
+
+##### <a name="allowed_ips"></a>`allowed_ips`
+
+Data type: `Array[Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]`
+
+different addresses that should be routed to this peer
+
+##### <a name="preshared_key"></a>`preshared_key`
+
+Data type: `Optional[String]`
+
+Define preshared key for the remote peer
+
+Default value: ``undef``
+
+##### <a name="persistent_keepalive"></a>`persistent_keepalive`
+
+Data type: `Integer[0,65535]`
+
+is set to 1 or greater, that's the interval in seconds wireguard sends a keepalive to the other peer(s). Useful if the sender is behind a NAT gateway or has a dynamic ip address
+
+Default value: `0`
 
 ## Data types
 
-### <a name="Wireguard--Peers"></a>`Wireguard::Peers`
+### <a name="wireguardpeers"></a>`Wireguard::Peers`
 
 custom data type for an array with wireguard peers
 
