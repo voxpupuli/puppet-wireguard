@@ -1,0 +1,22 @@
+<%- |
+    Optional[String[1]] $description,
+    String[1] $public_key,
+    String[1] $endpoint,
+    Optional[String[1]] $preshared_key,
+    Optional[Integer[0,65535]] $persistent_keepalive,
+    Array[Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]] $allowed_ips,
+| -%>
+
+<% if $description { -%>
+# <%= $description %>
+<% } -%>
+[Peer]
+PublicKey=<%= $public_key %>
+Endpoint=<%= $endpoint %>
+<% if $preshared_key { -%>
+PresharedKey=<%= $preshared_key %>
+<% } -%>
+PersistentKeepalive=<%= pick($persistent_keepalive, 0) %>
+<% pick($allowed_ips, ['fe80::/64', 'fd00::/8', '0.0.0.0/0']).each |$allowed_ip| { -%>
+AllowedIPs=<%= $allowed_ip %>
+<% } -%>
