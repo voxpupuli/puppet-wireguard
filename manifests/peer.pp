@@ -9,12 +9,12 @@
 # @param persistent_keepalive is set to 1 or greater, that's the interval in seconds wireguard sends a keepalive to the other peer(s). Useful if the sender is behind a NAT gateway or has a dynamic ip address
 #
 define wireguard::peer (
-  String $interface,
-  Optional[String] $description = undef,
-  String $public_key,
-  String $endpoint,
+  String[1] $interface,
+  Optional[String[1]] $description = undef,
+  String[1] $public_key,
+  String[1] $endpoint,
   Array[Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]] $allowed_ips,
-  Optional[String] $preshared_key = undef,
+  Optional[String[1]] $preshared_key = undef,
   Integer[0,65535] $persistent_keepalive = 0,
 ) {
   $peer_params = {
