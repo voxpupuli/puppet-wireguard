@@ -196,6 +196,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`input_interface`](#-wireguard--interface--input_interface)
 * [`manage_firewall`](#-wireguard--interface--manage_firewall)
 * [`dport`](#-wireguard--interface--dport)
+* [`table`](#-wireguard--interface--table)
 * [`firewall_mark`](#-wireguard--interface--firewall_mark)
 * [`source_addresses`](#-wireguard--interface--source_addresses)
 * [`destination_addresses`](#-wireguard--interface--destination_addresses)
@@ -255,6 +256,14 @@ Data type: `Integer[1024, 65000]`
 destination for firewall rules / where our wg instance will listen on. defaults to the last digits from the title
 
 Default value: `Integer(regsubst($title, '^\D+(\d+)$', '\1'))`
+
+##### <a name="-wireguard--interface--table"></a>`table`
+
+Data type: `Optional[String[1]]`
+
+Routing table to add routes to
+
+Default value: `undef`
 
 ##### <a name="-wireguard--interface--firewall_mark"></a>`firewall_mark`
 
