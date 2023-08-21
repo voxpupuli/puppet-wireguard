@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.1.0](https://github.com/voxpupuli/puppet-wireguard/tree/v3.1.0) (2023-08-21)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v3.0.0...v3.1.0)
+
+**Implemented enhancements:**
+
+- puppet/systemd: Allow 5.x [\#88](https://github.com/voxpupuli/puppet-wireguard/pull/88) ([smortex](https://github.com/smortex))
+- Add Puppet 8 support [\#86](https://github.com/voxpupuli/puppet-wireguard/pull/86) ([bastelfreak](https://github.com/bastelfreak))
+- puppetlabs/stdlib: Allow 9.x [\#85](https://github.com/voxpupuli/puppet-wireguard/pull/85) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v3.0.0](https://github.com/voxpupuli/puppet-wireguard/tree/v3.0.0) (2023-05-05)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v2.2.0...v3.0.0)
