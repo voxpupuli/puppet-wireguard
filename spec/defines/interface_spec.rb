@@ -39,10 +39,25 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{PrivateKeyFile=/etc/wireguard/#{title}}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{ListenPort=1234}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{Endpoint=#{params[:endpoint]}}) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{PersistentKeepalive=0}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Address}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Description}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{MTUBytes}) }
         it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
+      end
+
+      context 'with required params (public_key) and without firewall rules and with PersistentKeepalive=5' do
+        let :params do
+          {
+            public_key: 'blabla==',
+            endpoint: 'wireguard.example.com:1234',
+            manage_firewall: false,
+            persistent_keepalive: 5,
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{PersistentKeepalive=5}) }
       end
 
       context 'with required params (peers) and without firewall rules' do
