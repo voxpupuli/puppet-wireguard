@@ -27,8 +27,8 @@ define wireguard::peer (
   }
 
   concat::fragment { $name:
-      order   => 20,
-      target  => "/etc/wireguard/${interface}.conf",
-      content => epp("${module_name}/wireguard_peer.epp", $peer_params),
+    order   => 20,
+    target  => "/etc/wireguard/${interface}.conf",
+    content => epp("${module_name}/wireguard_peer.epp", $peer_params),
   }
 }
