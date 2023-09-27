@@ -250,14 +250,14 @@ define wireguard::interface (
       $peer_params = {
         'description'          => $description,
         'public_key'           => $facts['wireguard_pubkeys'][$interface],
-        'endpoint'             => "${facts['fqdn']}:${dport}",
+        'endpoint'             => "${facts['networking']['fqdn']}:${dport}",
         'allowed_ips'          => $allowed_ips,
         'preshared_key'        => $preshared_key,
         'persistent_keepalive' => $persistent_keepalive,
         'interface'            => $interface,
-        'tag'                  => "wireguard-${interface}"
+        'tag'                  => "wireguard-${interface}",
       }
-      @@wireguard::peer { "${facts['fqdn']}-${interface}-peer":
+      @@wireguard::peer { "${facts['networking']['fqdn']}-${interface}-peer":
         * => $peer_params,
       }
     }
