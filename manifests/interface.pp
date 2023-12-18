@@ -4,7 +4,7 @@
 # @param interface the title of the defined resource, will be used for the wg interface
 # @param ensure will ensure that the files for the provider will be present or absent
 # @param input_interface ethernet interface where the wireguard packages will enter the system, used for firewall rules
-# @param manage_firewall if true, a ferm rule will be created
+# @param manage_firewall if true, a nftables rule will be created
 # @param dport destination for firewall rules / where our wg instance will listen on. defaults to the last digits from the title
 # @param firewall_mark netfilter firewall mark to set on outgoing packages from this wireguard interface
 # @param source_addresses an array of ip addresses from where we receive wireguard connections
@@ -102,7 +102,7 @@ define wireguard::interface (
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
   Optional[Integer[0, 4294967295]] $firewall_mark = undef,
   String[1] $input_interface = $facts['networking']['primary'],
-  Boolean $manage_firewall = true,
+  Boolean $manage_firewall = $facts['os']['family'] ? { 'Gentoo' => false, default => true },
   Array[Stdlib::IP::Address] $source_addresses = [],
   Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $addresses = [],
   Optional[String[1]] $description = undef,
@@ -128,15 +128,69 @@ define wireguard::interface (
       true    => undef,
       default => $destination_addresses,
     }
-    ferm::rule { "allow_wg_${interface}":
-      action    => 'ACCEPT',
-      chain     => 'INPUT',
-      proto     => 'udp',
-      dport     => $dport,
-      interface => $input_interface,
-      saddr     => $source_addresses,
-      daddr     => $daddr,
-      notify    => Service['systemd-networkd'],
+    # ToDo: It would be nice if this would be a parameter
+    if $endpoint =~  /:(\d+)$/ {
+      $endpoint_port = Integer($1)
+    } else {
+      $endpoint_port = undef
+    }
+    $source_addresses.each |$index1, $saddr| {
+      if $saddr =~ Stdlib::IP::Address::V4 {
+        $daddr.each |$index2, $_daddr| {
+          if $_daddr =~ Stdlib::IP::Address::V4 {
+            nftables::simplerule { "allow_in_wg_${interface}-${index1}${index2}":
+              action  => 'accept',
+              comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
+              dport   => $dport,
+              sport   => $endpoint_port,
+              proto   => 'udp',
+              daddr   => $_daddr,
+              saddr   => $saddr,
+              iifname => $input_interface,
+              notify  => Service['systemd-networkd'],
+            }
+            nftables::simplerule { "allow_out_wg_${interface}-${index1}${index2}":
+              action  => 'accept',
+              comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
+              dport   => $endpoint_port,
+              sport   => $dport,
+              proto   => 'udp',
+              daddr   => $_daddr,
+              saddr   => $saddr,
+              oifname => $input_interface,
+              chain   => 'default_out',
+              notify  => Service['systemd-networkd'],
+            }
+          }
+        }
+      } else {
+        $daddr.each |$index2, $_daddr| {
+          if $_daddr =~ Stdlib::IP::Address::V6 {
+            nftables::simplerule { "allow_in_wg_${interface}-${index1}${index2}":
+              action  => 'accept',
+              comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
+              dport   => $dport,
+              proto   => 'udp',
+              daddr   => $_daddr,
+              saddr   => $saddr,
+              iifname => $input_interface,
+              notify  => Service['systemd-networkd'],
+            }
+            nftables::simplerule { "allow_out_wg_${interface}-${index1}${index2}":
+              action  => 'accept',
+              comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
+              dport   => $endpoint_port,
+              sport   => $dport,
+              proto   => 'udp',
+              daddr   => $saddr,
+              saddr   => $_daddr,
+              oifname => $input_interface,
+              chain   => 'default_out',
+              notify  => Service['systemd-networkd'],
+            }
+          }
+        }
+      }
     }
   }
 

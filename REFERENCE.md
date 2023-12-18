@@ -234,9 +234,9 @@ Default value: `$facts['networking']['primary']`
 
 Data type: `Boolean`
 
-if true, a ferm rule will be created
+if true, a nftables rule will be created
 
-Default value: `true`
+Default value: `$facts['os']['family'] ? { 'Gentoo' => false, default => true`
 
 ##### <a name="-wireguard--interface--dport"></a>`dport`
 
