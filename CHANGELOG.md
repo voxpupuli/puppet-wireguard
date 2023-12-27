@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v4.0.0](https://github.com/voxpupuli/puppet-wireguard/tree/v4.0.0) (2023-12-27)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v3.1.2...v4.0.0)
+
+**Breaking changes:**
+
+- Switch from voxpupuli/ferm to voxpupuli/nftables for firewalling [\#94](https://github.com/voxpupuli/puppet-wireguard/pull/94) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add Debian 12 support [\#95](https://github.com/voxpupuli/puppet-wireguard/pull/95) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v3.1.2](https://github.com/voxpupuli/puppet-wireguard/tree/v3.1.2) (2023-08-30)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v3.1.0...v3.1.2)
