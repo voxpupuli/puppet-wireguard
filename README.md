@@ -20,12 +20,15 @@ Puppet module to configure wireguard through systemd-networkd configs
 
 ## Setup
 
-The module can create firewall rules with [voxpupuli/ferm](https://github.com/voxpupuli/puppet-ferm#puppet-ferm).
+The module can create firewall rules with [voxpupuli/nftables](https://github.com/voxpupuli/puppet-nftables?tab=readme-ov-file#nftables-puppet-module).
 This is enabled by default but can be disabled by setting the `manage_firewall`
 parameter to false in the `wireguard::interface` defined resource. You need to
-have the `ferm` class in your catalog to use the feature.
+have the `nftables` class in your catalog to use the feature (Version 3.6.0 or
+newer).
 
-This module can uses [systemd-networkd](https://www.freedesktop.org/software/systemd/man/systemd-networkd.html) or [wg-quick](https://manpages.debian.org/wg-quick) to
+**Version 3 and older of the module use voxpupuli/ferm to manage firewall rules**
+
+This module can use [systemd-networkd](https://www.freedesktop.org/software/systemd/man/systemd-networkd.html) or [wg-quick](https://manpages.debian.org/wg-quick) to
 configure tunnels. For the former, you need to have a systemd-networkd
 service resource in your catalog. We recommend [voxpupuli/systemd](https://github.com/voxpupuli/puppet-systemd#systemd)
 with `manage_networkd` set to true. You do not need to configure your

@@ -5,14 +5,30 @@ require 'spec_helper'
 describe 'wireguard::interface', type: :define do
   let(:title) { 'as1234' }
 
-  on_supported_os.each do |os, facts|
+  on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let :facts do
-        facts
+        os_facts
       end
 
-      context 'with all defaults it wont work' do
+      context 'with only default values and manage_firewall=true it wont work' do
+        let :params do
+          {
+            manage_firewall: true
+          }
+        end
+
         it { is_expected.not_to compile }
+      end
+
+      context 'with only default values and manage_firewall=false it wont work' do
+        let :params do
+          {
+            manage_firewall: false
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
       end
 
       context 'with required params (public_key) and without firewall rules' do
@@ -43,7 +59,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Address}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Description}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{MTUBytes}) }
-        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
+        it { is_expected.to have_nftables__simplerule_resource_count(0) }
       end
 
       context 'with required params (public_key) and without firewall rules and with PersistentKeepalive=5' do
@@ -105,13 +121,8 @@ describe 'wireguard::interface', type: :define do
       end
 
       context 'with required params and with firewall rules' do
-        # we need to set configfile/configdirectory because the ferm module doesn't provide defaults for all OSes we test against
         let :pre_condition do
-          'class{"ferm":
-          configfile => "/etc/ferm.conf",
-          configdirectory => "/etc/ferm.d/"
-          }
-          class {"systemd":
+          'class {"systemd":
             manage_networkd => true
           }'
         end
@@ -135,7 +146,11 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_systemd__network("#{title}.netdev") }
         it { is_expected.to contain_systemd__network("#{title}.network") }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Address}) }
-        it { is_expected.to contain_ferm__rule("allow_wg_#{title}") }
+
+        context 'on non Gentoo', if: os_facts[:os]['family'] != 'Gentoo' do
+          it { is_expected.to contain_nftables__simplerule('allow_in_wg_as1234-00') }
+          it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-00') }
+        end
       end
 
       context 'with required params and without firewall rules and with configured addresses' do
@@ -163,16 +178,11 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=192.168.218.87/32}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Peer=172.20.53.97/32}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=fe80::ade1/64}) }
-        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
 
       context 'with empty destintion_addresses' do
         let :pre_condition do
-          'class{"ferm":
-          configfile => "/etc/ferm.conf",
-          configdirectory => "/etc/ferm.d/"
-          }
-          class {"systemd":
+          'class {"systemd":
             manage_networkd => true
           }'
         end
@@ -180,13 +190,12 @@ describe 'wireguard::interface', type: :define do
           {
             public_key: 'blabla==',
             endpoint: 'wireguard.example.com:1234',
-            manage_firewall: true,
             destination_addresses: [],
           }
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_ferm__rule("allow_wg_#{title}").without_daddr }
+        it { is_expected.to have_nftables__simplerule_resource_count(0) }
       end
 
       context 'with description' do
@@ -297,7 +306,6 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_systemd__network("#{title}.network") }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(expected_netdev_content) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(expected_network_content) }
-        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
 
       context 'with required params and defined private key and without firewall rules and with configured addresses' do
@@ -326,7 +334,6 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=192.168.218.87/32}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Peer=172.20.53.97/32}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=fe80::ade1/64}) }
-        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
 
       context 'wgquick with required params (public_key) and without firewall rules' do
@@ -349,7 +356,6 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/wireguard/#{title}.pub") }
         it { is_expected.to contain_file("/etc/wireguard/#{title}") }
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf") }
-        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
 
       context 'with required params and defined private key and without firewall rules and with configured addresses with dns' do
@@ -379,7 +385,6 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{DNS=192.168.218.1}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Peer=172.20.53.97/32}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").with_content(%r{Address=fe80::ade1/64}) }
-        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
 
       context 'wgquick with required params (public_key) and an address entry with dns also without firewall rules' do
@@ -404,7 +409,6 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{[Interface]}) } # rubocop:disable Lint/DuplicateRegexpCharacterClassElement
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{Address=192.168.218.87/32}) }
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{DNS=192.168.218.1}) }
-        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
 
       context 'wgquick with postup and predown commands and without firewall' do
@@ -436,7 +440,6 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{Address=192.168.218.87/32}) }
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{PostUp=resolvectl dns %i 10.34.3.1; resolvectl domain %i "~hello"}) }
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{PreDown=resolvectl revert %i}) }
-        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
 
       context 'wgquick with mtu and without firewall' do
@@ -462,7 +465,6 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{[Interface]}) } # rubocop:disable Lint/DuplicateRegexpCharacterClassElement
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{Address=192.168.218.87/32}) }
         it { is_expected.to contain_file("/etc/wireguard/#{title}.conf").with_content(%r{MTU=1280}) }
-        it { is_expected.not_to contain_ferm__rule("allow_wg_#{title}") }
       end
 
       context 'with required params and firewall mark and without firewall rules' do
