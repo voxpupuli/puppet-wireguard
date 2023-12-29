@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v4.0.1](https://github.com/voxpupuli/puppet-wireguard/tree/v4.0.1) (2023-12-29)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v4.0.0...v4.0.1)
+
+**Fixed bugs:**
+
+- nftables: fix daddr/saddr for IPv4 outgoing [\#98](https://github.com/voxpupuli/puppet-wireguard/pull/98) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v4.0.0](https://github.com/voxpupuli/puppet-wireguard/tree/v4.0.0) (2023-12-27)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v3.1.2...v4.0.0)
