@@ -125,7 +125,7 @@ define wireguard::interface (
 
   if $manage_firewall {
     $daddr = empty($destination_addresses) ? {
-      true    => undef,
+      true    => [undef],
       default => $destination_addresses,
     }
     # ToDo: It would be nice if this would be a parameter
