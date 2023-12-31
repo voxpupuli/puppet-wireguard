@@ -8,6 +8,7 @@
     Array[String[1]] $postup_cmds,
     Array[String[1]] $predown_cmds,
     Array[String[1]] $postdown_cmds,
+    Array[Stdlib::IP::Address] $default_allowlist,
     Optional[Integer[1280, 9000]] $mtu = undef,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
@@ -53,7 +54,7 @@ Endpoint=<%= $peer['endpoint'] %>
 PresharedKey=<%= $peer['preshared_key'] %>
 <% } -%>
 PersistentKeepalive=<%= pick($peer['persistent_keepalive'], 0) %>
-<% pick($peer['allowed_ips'], ['fe80::/64', 'fd00::/8', '0.0.0.0/0']).each |$allowed_ip| { -%>
+<% pick($peer['allowed_ips'], $default_allowlist).each |$allowed_ip| { -%>
 AllowedIPs=<%= $allowed_ip %>
 <% } -%>
 <% } -%>

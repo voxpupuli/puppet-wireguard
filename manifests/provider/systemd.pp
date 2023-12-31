@@ -11,6 +11,7 @@ define wireguard::provider::systemd (
   Optional[String[1]] $description = undef,
   Optional[Integer[1200, 9000]] $mtu = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
+  Array[Stdlib::IP::Address] $default_allowlist = [],
 ) {
   assert_private()
 
@@ -22,12 +23,13 @@ define wireguard::provider::systemd (
   systemd::network { "${interface}.netdev":
     ensure          => $systemd_ensure,
     content         => epp("${module_name}/netdev.epp", {
-        'interface'     => $interface,
-        'dport'         => $dport,
-        'firewall_mark' => $firewall_mark,
-        'description'   => $description,
-        'mtu'           => $mtu,
-        'peers'         => $peers,
+        'interface'         => $interface,
+        'dport'             => $dport,
+        'firewall_mark'     => $firewall_mark,
+        'description'       => $description,
+        'mtu'               => $mtu,
+        'peers'             => $peers,
+        'default_allowlist' => $default_allowlist,
     }),
     restart_service => true,
     owner           => 'root',

@@ -268,30 +268,32 @@ define wireguard::interface (
       }
 
       wireguard::provider::systemd { $interface :
-        ensure        => $ensure,
-        interface     => $interface,
-        peers         => $peers + $peer,
-        dport         => $dport,
-        firewall_mark => $firewall_mark,
-        addresses     => $addresses,
-        description   => $description,
-        mtu           => $mtu,
-        routes        => $routes,
+        ensure            => $ensure,
+        interface         => $interface,
+        peers             => $peers + $peer,
+        dport             => $dport,
+        firewall_mark     => $firewall_mark,
+        addresses         => $addresses,
+        description       => $description,
+        mtu               => $mtu,
+        routes            => $routes,
+        default_allowlist => $wireguard::default_allowlist,
       }
     }
     'wgquick': {
       wireguard::provider::wgquick { $interface :
-        ensure        => $ensure,
-        interface     => $interface,
-        peers         => $peers + $peer,
-        dport         => $dport,
-        firewall_mark => $firewall_mark,
-        addresses     => $addresses,
-        preup_cmds    => $preup_cmds,
-        postup_cmds   => $postup_cmds,
-        predown_cmds  => $predown_cmds,
-        postdown_cmds => $postdown_cmds,
-        mtu           => $mtu,
+        ensure            => $ensure,
+        interface         => $interface,
+        peers             => $peers + $peer,
+        dport             => $dport,
+        firewall_mark     => $firewall_mark,
+        addresses         => $addresses,
+        preup_cmds        => $preup_cmds,
+        postup_cmds       => $postup_cmds,
+        predown_cmds      => $predown_cmds,
+        postdown_cmds     => $postdown_cmds,
+        mtu               => $mtu,
+        default_allowlist => $wireguard::default_allowlist,
       }
     }
     default: {

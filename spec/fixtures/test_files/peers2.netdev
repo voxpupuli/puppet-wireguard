@@ -1,0 +1,22 @@
+# THIS FILE IS MANAGED BY PUPPET
+# based on https://dn42.dev/howto/wireguard
+[NetDev]
+Name=as1234
+Kind=wireguard
+
+[WireGuard]
+PrivateKeyFile=/etc/wireguard/as1234
+ListenPort=1234
+
+[WireGuardPeer]
+PublicKey=blabla==
+Endpoint=wireguard.example.com:1234
+PersistentKeepalive=0
+AllowedIPs=127.0.0.1/32
+
+[WireGuardPeer]
+Description=foo
+PublicKey=foo==
+PresharedKey=bar=
+PersistentKeepalive=0
+AllowedIPs=192.0.2.3
