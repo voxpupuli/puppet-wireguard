@@ -484,6 +484,39 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{FirewallMark=1234}) }
       end
+
+      context 'with modified default_allowlist and systemd provider' do
+        let :pre_condition do
+          'class { "wireguard": default_allowlist => ["127.0.0.1/32"],}'
+        end
+        let :params do
+          {
+            provider: 'systemd',
+            peers: [
+              {
+                public_key: 'blabla==',
+                endpoint: 'wireguard.example.com:1234',
+              },
+              {
+                public_key: 'foo==',
+                preshared_key: 'bar=',
+                description: 'foo',
+                allowed_ips: ['192.0.2.3'],
+              }
+            ],
+            manage_firewall: false,
+            # we need to set destination_addresses to overwrite the default
+            # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
+            destination_addresses: [facts[:networking]['ip'],],
+            addresses: [{ 'Address' => '192.0.2.1/24' }],
+          }
+        end
+        let :expected_netdev_content_allow do
+          File.read('spec/fixtures/test_files/peers2.netdev')
+        end
+
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(expected_netdev_content_allow) }
+      end
     end
   end
 end

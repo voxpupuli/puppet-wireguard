@@ -39,6 +39,7 @@ The following parameters are available in the `wireguard` class:
 * [`config_directory`](#-wireguard--config_directory)
 * [`purge_unknown_keys`](#-wireguard--purge_unknown_keys)
 * [`interfaces`](#-wireguard--interfaces)
+* [`default_allowlist`](#-wireguard--default_allowlist)
 
 ##### <a name="-wireguard--manage_package"></a>`manage_package`
 
@@ -87,6 +88,14 @@ Data type: `Hash[String[1], Any]`
 hash of interfaces to create. Provides hiera integration.
 
 Default value: `{}`
+
+##### <a name="-wireguard--default_allowlist"></a>`default_allowlist`
+
+Data type: `Array[Stdlib::IP::Address]`
+
+array of allowed IP ranges for interfaces. Can be overwritten for individual interfaces
+
+Default value: `['fe80::/64', 'fd00::/8', '0.0.0.0/0']`
 
 ## Defined types
 

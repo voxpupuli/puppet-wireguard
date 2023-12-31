@@ -4,6 +4,7 @@
       Wireguard::Peers $peers,
       Optional[String] $description,
       Optional[Integer] $mtu,
+      Array[Stdlib::IP::Address] $default_allowlist,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
 # based on https://dn42.dev/howto/wireguard
@@ -37,7 +38,7 @@ PresharedKey=<%= $peer['preshared_key'] %>
 Endpoint=<%= $peer['endpoint'] %>
 <% } -%>
 PersistentKeepalive=<%= pick($peer['persistent_keepalive'], 0) %>
-<% pick($peer['allowed_ips'], ['fe80::/64', 'fd00::/8', '0.0.0.0/0']).each |$allowed_ip| { -%>
+<% pick($peer['allowed_ips'], $default_allowlist).each |$allowed_ip| { -%>
 AllowedIPs=<%= $allowed_ip %>
 <% } -%>
 <% } -%>

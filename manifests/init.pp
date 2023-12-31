@@ -7,6 +7,7 @@
 # @param config_directory the path to the wireguard directory
 # @param purge_unknown_keys by default Puppet will purge unknown wireguard keys from `$config_directory`
 # @param interfaces hash of interfaces to create. Provides hiera integration.
+# @param default_allowlist array of allowed IP ranges for interfaces. Can be overwritten for individual interfaces
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 #
@@ -17,6 +18,7 @@ class wireguard (
   Stdlib::Absolutepath $config_directory = '/etc/wireguard',
   Boolean $purge_unknown_keys = true,
   Hash[String[1], Any] $interfaces = {},
+  Array[Stdlib::IP::Address] $default_allowlist = ['fe80::/64', 'fd00::/8', '0.0.0.0/0'],
 ) {
   if $manage_package {
     package { 'wireguard-tools':
