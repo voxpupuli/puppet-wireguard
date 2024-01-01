@@ -546,6 +546,33 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-0') }
         it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-1') }
       end
+
+      # Usually we parse the src port for incoming packets / the dst port for outgoing packets from the $endpoint param
+      # The param is optional, in case you want to create a passive endpoint for clients with dynamic ip addresses
+      # In those cases we still need to create firewall rules, but without src port for incoming packets / the dst port
+      # To make this all a bit easier, we also added a new parameter, $endpoint_port, which takes precedence over parsing $endpoint
+      context '' do
+        let :pre_condition do
+          'class {"systemd":
+            manage_networkd => true
+          }'
+        end
+        let :params do
+          {
+            public_key: 'blabla==',
+            manage_firewall: true,
+            destination_addresses: [],
+            addresses: [{ 'Address' => '192.0.2.1/24' }],
+            source_addresses: ['fe80::1', '127.0.0.1'],
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_nftables__simplerule('allow_in_wg_as1234-0').without_sport.with_dport(1234) }
+        it { is_expected.to contain_nftables__simplerule('allow_in_wg_as1234-1').without_sport.with_dport(1234) }
+        it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-0').without_dport.with_sport(1234) }
+        it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-1').without_dport.with_sport(1234) }
+      end
     end
   end
 end
