@@ -24,6 +24,7 @@
 # @param postup_cmds is an array of commands which should run as preup command (only supported by wgquick)
 # @param predown_cmds is an array of commands which should run as preup command (only supported by wgquick)
 # @param postdown_cmds is an array of commands which should run as preup command (only supported by wgquick)
+# @param endpoint_port optional outgoing port from the other endpoint. Will be used for firewalling. If not set, we will try to parse $endpoint
 #
 # @author Tim Meusel <tim@bastelfreak.de>
 # @author Sebastian Rakel <sebastian@devunit.eu>
@@ -116,6 +117,7 @@ define wireguard::interface (
   Array[String[1]] $postup_cmds = [],
   Array[String[1]] $predown_cmds = [],
   Array[String[1]] $postdown_cmds = [],
+  Optional[Stdlib::Port] $endpoint_port = undef,
 ) {
   include wireguard
 
@@ -123,13 +125,14 @@ define wireguard::interface (
     warning('peers or public_key have to been set')
   }
 
+  $_endpoint_port = if $endpoint_port {
+    $endpoint_port
+  } elsif ($endpoint and $endpoint =~ /:(\d+)$/) {
+    Integer($1)
+  } else {
+    undef
+  }
   if $manage_firewall {
-    # ToDo: It would be nice if this would be a parameter
-    if $endpoint =~  /:(\d+)$/ {
-      $endpoint_port = Integer($1)
-    } else {
-      $endpoint_port = undef
-    }
     $source_addresses.each |$index1, $saddr| {
       if $saddr =~ Stdlib::IP::Address::V4 {
         if empty($destination_addresses) {
@@ -137,7 +140,7 @@ define wireguard::interface (
             action  => 'accept',
             comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
             dport   => $dport,
-            sport   => $endpoint_port,
+            sport   => $_endpoint_port,
             proto   => 'udp',
             saddr   => $saddr,
             iifname => $input_interface,
@@ -146,7 +149,7 @@ define wireguard::interface (
           nftables::simplerule { "allow_out_wg_${interface}-${index1}":
             action  => 'accept',
             comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
-            dport   => $endpoint_port,
+            dport   => $_endpoint_port,
             sport   => $dport,
             proto   => 'udp',
             daddr   => $saddr,
@@ -161,7 +164,7 @@ define wireguard::interface (
                 action  => 'accept',
                 comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
                 dport   => $dport,
-                sport   => $endpoint_port,
+                sport   => $_endpoint_port,
                 proto   => 'udp',
                 daddr   => $_daddr,
                 saddr   => $saddr,
@@ -171,7 +174,7 @@ define wireguard::interface (
               nftables::simplerule { "allow_out_wg_${interface}-${index1}${index2}":
                 action  => 'accept',
                 comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
-                dport   => $endpoint_port,
+                dport   => $_endpoint_port,
                 sport   => $dport,
                 proto   => 'udp',
                 daddr   => $saddr,
@@ -189,6 +192,7 @@ define wireguard::interface (
             action  => 'accept',
             comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
             dport   => $dport,
+            sport   => $_endpoint_port,
             proto   => 'udp',
             saddr   => $saddr,
             iifname => $input_interface,
@@ -197,7 +201,7 @@ define wireguard::interface (
           nftables::simplerule { "allow_out_wg_${interface}-${index1}":
             action  => 'accept',
             comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
-            dport   => $endpoint_port,
+            dport   => $_endpoint_port,
             sport   => $dport,
             proto   => 'udp',
             daddr   => $saddr,
@@ -212,6 +216,7 @@ define wireguard::interface (
                 action  => 'accept',
                 comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
                 dport   => $dport,
+                sport   => $_endpoint_port,
                 proto   => 'udp',
                 daddr   => $_daddr,
                 saddr   => $saddr,
@@ -221,7 +226,7 @@ define wireguard::interface (
               nftables::simplerule { "allow_out_wg_${interface}-${index1}${index2}":
                 action  => 'accept',
                 comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
-                dport   => $endpoint_port,
+                dport   => $_endpoint_port,
                 sport   => $dport,
                 proto   => 'udp',
                 daddr   => $saddr,
