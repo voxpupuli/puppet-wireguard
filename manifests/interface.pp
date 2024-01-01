@@ -124,10 +124,6 @@ define wireguard::interface (
   }
 
   if $manage_firewall {
-    $daddr = empty($destination_addresses) ? {
-      true    => undef,
-      default => $destination_addresses,
-    }
     # ToDo: It would be nice if this would be a parameter
     if $endpoint =~  /:(\d+)$/ {
       $endpoint_port = Integer($1)
@@ -136,57 +132,104 @@ define wireguard::interface (
     }
     $source_addresses.each |$index1, $saddr| {
       if $saddr =~ Stdlib::IP::Address::V4 {
-        $daddr.each |$index2, $_daddr| {
-          if $_daddr =~ Stdlib::IP::Address::V4 {
-            nftables::simplerule { "allow_in_wg_${interface}-${index1}${index2}":
-              action  => 'accept',
-              comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
-              dport   => $dport,
-              sport   => $endpoint_port,
-              proto   => 'udp',
-              daddr   => $_daddr,
-              saddr   => $saddr,
-              iifname => $input_interface,
-              notify  => Service['systemd-networkd'],
-            }
-            nftables::simplerule { "allow_out_wg_${interface}-${index1}${index2}":
-              action  => 'accept',
-              comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
-              dport   => $endpoint_port,
-              sport   => $dport,
-              proto   => 'udp',
-              daddr   => $saddr,
-              saddr   => $_daddr,
-              oifname => $input_interface,
-              chain   => 'default_out',
-              notify  => Service['systemd-networkd'],
+        if empty($destination_addresses) {
+          nftables::simplerule { "allow_in_wg_${interface}-${index1}":
+            action  => 'accept',
+            comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
+            dport   => $dport,
+            sport   => $endpoint_port,
+            proto   => 'udp',
+            saddr   => $saddr,
+            iifname => $input_interface,
+            notify  => Service['systemd-networkd'],
+          }
+          nftables::simplerule { "allow_out_wg_${interface}-${index1}":
+            action  => 'accept',
+            comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
+            dport   => $endpoint_port,
+            sport   => $dport,
+            proto   => 'udp',
+            daddr   => $saddr,
+            oifname => $input_interface,
+            chain   => 'default_out',
+            notify  => Service['systemd-networkd'],
+          }
+        } else {
+          $destination_addresses.each |$index2, $_daddr| {
+            if $_daddr =~ Stdlib::IP::Address::V4 {
+              nftables::simplerule { "allow_in_wg_${interface}-${index1}${index2}":
+                action  => 'accept',
+                comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
+                dport   => $dport,
+                sport   => $endpoint_port,
+                proto   => 'udp',
+                daddr   => $_daddr,
+                saddr   => $saddr,
+                iifname => $input_interface,
+                notify  => Service['systemd-networkd'],
+              }
+              nftables::simplerule { "allow_out_wg_${interface}-${index1}${index2}":
+                action  => 'accept',
+                comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
+                dport   => $endpoint_port,
+                sport   => $dport,
+                proto   => 'udp',
+                daddr   => $saddr,
+                saddr   => $_daddr,
+                oifname => $input_interface,
+                chain   => 'default_out',
+                notify  => Service['systemd-networkd'],
+              }
             }
           }
         }
       } else {
-        $daddr.each |$index2, $_daddr| {
-          if $_daddr =~ Stdlib::IP::Address::V6 {
-            nftables::simplerule { "allow_in_wg_${interface}-${index1}${index2}":
-              action  => 'accept',
-              comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
-              dport   => $dport,
-              proto   => 'udp',
-              daddr   => $_daddr,
-              saddr   => $saddr,
-              iifname => $input_interface,
-              notify  => Service['systemd-networkd'],
-            }
-            nftables::simplerule { "allow_out_wg_${interface}-${index1}${index2}":
-              action  => 'accept',
-              comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
-              dport   => $endpoint_port,
-              sport   => $dport,
-              proto   => 'udp',
-              daddr   => $saddr,
-              saddr   => $_daddr,
-              oifname => $input_interface,
-              chain   => 'default_out',
-              notify  => Service['systemd-networkd'],
+        if empty($destination_addresses) {
+          nftables::simplerule { "allow_in_wg_${interface}-${index1}":
+            action  => 'accept',
+            comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
+            dport   => $dport,
+            proto   => 'udp',
+            saddr   => $saddr,
+            iifname => $input_interface,
+            notify  => Service['systemd-networkd'],
+          }
+          nftables::simplerule { "allow_out_wg_${interface}-${index1}":
+            action  => 'accept',
+            comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
+            dport   => $endpoint_port,
+            sport   => $dport,
+            proto   => 'udp',
+            daddr   => $saddr,
+            oifname => $input_interface,
+            chain   => 'default_out',
+            notify  => Service['systemd-networkd'],
+          }
+        } else {
+          $destination_addresses.each |$index2, $_daddr| {
+            if $_daddr =~ Stdlib::IP::Address::V6 {
+              nftables::simplerule { "allow_in_wg_${interface}-${index1}${index2}":
+                action  => 'accept',
+                comment => "Allow traffic from interface ${input_interface} from IP ${saddr} for wireguard tunnel ${interface}",
+                dport   => $dport,
+                proto   => 'udp',
+                daddr   => $_daddr,
+                saddr   => $saddr,
+                iifname => $input_interface,
+                notify  => Service['systemd-networkd'],
+              }
+              nftables::simplerule { "allow_out_wg_${interface}-${index1}${index2}":
+                action  => 'accept',
+                comment => "Allow traffic out interface ${input_interface} to IP ${saddr} for wireguard tunnel ${interface}",
+                dport   => $endpoint_port,
+                sport   => $dport,
+                proto   => 'udp',
+                daddr   => $saddr,
+                saddr   => $_daddr,
+                oifname => $input_interface,
+                chain   => 'default_out',
+                notify  => Service['systemd-networkd'],
+              }
             }
           }
         }
