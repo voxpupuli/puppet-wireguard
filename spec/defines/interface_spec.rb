@@ -614,6 +614,30 @@ describe 'wireguard::interface', type: :define do
           it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-0').with_dport(5678).with_sport(1234) }
           it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-1').with_dport(5678).with_sport(1234) }
         end
+
+        context 'with endpoint and destination_addresses' do
+          let :pre_condition do
+            'class {"systemd":
+              manage_networkd => true
+            }'
+          end
+          let :params do
+            {
+              public_key: 'blabla==',
+              manage_firewall: true,
+              destination_addresses: ['fe80::2', '1.1.1.1'],
+              addresses: [{ 'Address' => '192.0.2.1/24' }],
+              source_addresses: ['fe80::1', '127.0.0.1'],
+              endpoint: 'foo.example.com:5678',
+            }
+          end
+
+          it { is_expected.to compile }
+          it { is_expected.to contain_nftables__simplerule('allow_in_wg_as1234-00').with_sport(5678).with_dport(1234).with_saddr('fe80::1').with_daddr('fe80::2') }
+          it { is_expected.to contain_nftables__simplerule('allow_in_wg_as1234-11').with_sport(5678).with_dport(1234).with_saddr('127.0.0.1').with_daddr('1.1.1.1') }
+          it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-00').with_dport(5678).with_sport(1234).with_daddr('fe80::1').with_saddr('fe80::2') }
+          it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-11').with_dport(5678).with_sport(1234).with_daddr('127.0.0.1').with_saddr('1.1.1.1') }
+        end
       end
     end
   end
