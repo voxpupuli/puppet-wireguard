@@ -214,6 +214,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`postup_cmds`](#-wireguard--interface--postup_cmds)
 * [`predown_cmds`](#-wireguard--interface--predown_cmds)
 * [`postdown_cmds`](#-wireguard--interface--postdown_cmds)
+* [`endpoint_port`](#-wireguard--interface--endpoint_port)
 
 ##### <a name="-wireguard--interface--interface"></a>`interface`
 
@@ -398,6 +399,14 @@ Data type: `Array[String[1]]`
 is an array of commands which should run as preup command (only supported by wgquick)
 
 Default value: `[]`
+
+##### <a name="-wireguard--interface--endpoint_port"></a>`endpoint_port`
+
+Data type: `Optional[Stdlib::Port]`
+
+optional outgoing port from the other endpoint. Will be used for firewalling. If not set, we will try to parse $endpoint
+
+Default value: `undef`
 
 ## Data types
 
