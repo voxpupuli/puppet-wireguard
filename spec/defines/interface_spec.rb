@@ -29,6 +29,7 @@ describe 'wireguard::interface', type: :define do
         end
 
         it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_wireguard__provider__systemd('as1234') }
       end
 
       context 'with required params (public_key) and without firewall rules' do
@@ -516,6 +517,34 @@ describe 'wireguard::interface', type: :define do
         end
 
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(expected_netdev_content_allow) }
+      end
+
+      # the following is a usecase for clients with dynamic ip addresses
+      # in those cases we don't want to match the dst IP for incoming packets
+      # so destination_addresses is an empty array. We need to ensure we create
+      # firewall rules, but without dst
+      context 'without destination we still create firewall rules' do
+        let :pre_condition do
+          'class {"systemd":
+            manage_networkd => true
+          }'
+        end
+        let :params do
+          {
+            endpoint: 'wireguard.example.com:1234',
+            public_key: 'blabla==',
+            manage_firewall: true,
+            destination_addresses: [],
+            addresses: [{ 'Address' => '192.0.2.1/24' }],
+            source_addresses: ['fe80::1', '127.0.0.1'],
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_nftables__simplerule('allow_in_wg_as1234-0') }
+        it { is_expected.to contain_nftables__simplerule('allow_in_wg_as1234-1') }
+        it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-0') }
+        it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-1') }
       end
     end
   end
