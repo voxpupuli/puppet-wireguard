@@ -524,17 +524,14 @@ describe 'wireguard::interface', type: :define do
             endpoint: 'wireguard.example.com:1234',
             public_key: 'blabla==',
             manage_firewall: true,
-            destination_addresses: [],
             addresses: [{ 'Address' => '192.0.2.1/24' }],
             source_addresses: ['fe80::1', '127.0.0.1'],
           }
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_nftables__simplerule('allow_in_wg_as1234-0') }
-        it { is_expected.to contain_nftables__simplerule('allow_in_wg_as1234-1') }
-        it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-0') }
-        it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-1') }
+        it { is_expected.to contain_nftables__simplerule('allow_in_wg_as1234-01') }
+        it { is_expected.to contain_nftables__simplerule('allow_out_wg_as1234-01') }
       end
 
       # Usually we parse the src port for incoming packets / the dst port for outgoing packets from the $endpoint param
@@ -556,7 +553,7 @@ describe 'wireguard::interface', type: :define do
               manage_firewall: true,
               destination_addresses: [],
               addresses: [{ 'Address' => '192.0.2.1/24' }],
-              source_addresses: ['fe80::1', '127.0.0.1'],
+              destination_addresses: ['fe80::1', '127.0.0.1'],
             }
           end
 
@@ -577,9 +574,9 @@ describe 'wireguard::interface', type: :define do
             {
               public_key: 'blabla==',
               manage_firewall: true,
-              destination_addresses: [],
+              source_addresses: [],
               addresses: [{ 'Address' => '192.0.2.1/24' }],
-              source_addresses: ['fe80::1', '127.0.0.1'],
+              destination_addresses: ['fe80::1', '127.0.0.1'],
               endpoint_port: 5678,
             }
           end
@@ -601,9 +598,9 @@ describe 'wireguard::interface', type: :define do
             {
               public_key: 'blabla==',
               manage_firewall: true,
-              destination_addresses: [],
+              source_addresses: [],
               addresses: [{ 'Address' => '192.0.2.1/24' }],
-              source_addresses: ['fe80::1', '127.0.0.1'],
+              destination_addresses: ['fe80::1', '127.0.0.1'],
               endpoint: 'foo.example.com:5678',
             }
           end
