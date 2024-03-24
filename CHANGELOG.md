@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v4.1.0](https://github.com/voxpupuli/puppet-wireguard/tree/v4.1.0) (2024-03-24)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v4.0.1...v4.1.0)
+
+**Implemented enhancements:**
+
+- Adds "table" parameter to a wireguard interface stanza to be able to set it in the wg-quick/netdev configuration. [\#109](https://github.com/voxpupuli/puppet-wireguard/pull/109) ([JGodin-C2C](https://github.com/JGodin-C2C))
+- puppetlabs/systemd: Allow 6.x [\#108](https://github.com/voxpupuli/puppet-wireguard/pull/108) ([zilchms](https://github.com/zilchms))
+- Make default AllowedIPs= configureable [\#100](https://github.com/voxpupuli/puppet-wireguard/pull/100) ([bastelfreak](https://github.com/bastelfreak))
+
+**Fixed bugs:**
+
+- Firewall: Add missing sport for IPv6 with missing destination\_addresses [\#105](https://github.com/voxpupuli/puppet-wireguard/pull/105) ([bastelfreak](https://github.com/bastelfreak))
+- Make src port for firwalling configureable\] [\#104](https://github.com/voxpupuli/puppet-wireguard/pull/104) ([bastelfreak](https://github.com/bastelfreak))
+- nftables: Handle missing destination addresses [\#101](https://github.com/voxpupuli/puppet-wireguard/pull/101) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v4.0.1](https://github.com/voxpupuli/puppet-wireguard/tree/v4.0.1) (2023-12-29)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v4.0.0...v4.0.1)
