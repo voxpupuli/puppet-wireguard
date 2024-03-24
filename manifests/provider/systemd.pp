@@ -6,6 +6,7 @@ define wireguard::provider::systemd (
   Enum['present', 'absent'] $ensure = 'present',
   Wireguard::Peers $peers = [],
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
+  Optional[String[1]] $table = undef,
   Optional[Integer[0,4294967295]] $firewall_mark = undef,
   Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $addresses = [],
   Optional[String[1]] $description = undef,
@@ -25,6 +26,7 @@ define wireguard::provider::systemd (
     content         => epp("${module_name}/netdev.epp", {
         'interface'         => $interface,
         'dport'             => $dport,
+        'table'             => $table,
         'firewall_mark'     => $firewall_mark,
         'description'       => $description,
         'mtu'               => $mtu,

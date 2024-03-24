@@ -1,6 +1,7 @@
 <%- |
     String[1] $interface,
     Stdlib::Port $dport,
+    Optional[String[1]] $table,
     Optional[Integer] $firewall_mark,
     Wireguard::Peers $peers,
     Array[Hash] $addresses,
@@ -20,6 +21,9 @@
 <% } -%>
 <% } -%>
 ListenPort=<%= $dport %>
+<% if $table { -%>
+Table=<%= $table %>
+<% } -%>
 <% if $firewall_mark { -%>
 FwMark=<%= $firewall_mark %>
 <% } -%>
