@@ -44,6 +44,7 @@ define wireguard::provider::systemd (
     'interface'       => $interface,
     'addresses'       => $addresses,
     'routes'          => $routes,
+    'systemd_version' => Integer($facts['systemd_version']),
   }
 
   systemd::network { "${interface}.network":
