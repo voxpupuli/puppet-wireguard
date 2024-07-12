@@ -2,6 +2,7 @@
     Array[Hash] $addresses,
     String[1] $interface,
     Array[Hash[String[1], Variant[String[1], Boolean]]] $routes,
+    Integer $systemd_version,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
 # based on https://dn42.dev/howto/wireguard
@@ -11,7 +12,12 @@ Name=<%= $interface %>
 [Network]
 DHCP=no
 IPv6AcceptRA=false
+<%- if $systemd_version < 256 { -%>
 IPForward=yes
+<%- } else { -%>
+IPv4Forwarding=yes
+IPv6Forwarding=yes
+<%- } -%>
 
 # for networkd >= 244 KeepConfiguration stops networkd from
 # removing routes on this interface when restarting

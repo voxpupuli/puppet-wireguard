@@ -6,7 +6,8 @@ Name=as1234
 [Network]
 DHCP=no
 IPv6AcceptRA=false
-IPForward=yes
+IPv4Forwarding=yes
+IPv6Forwarding=yes
 
 # for networkd >= 244 KeepConfiguration stops networkd from
 # removing routes on this interface when restarting
