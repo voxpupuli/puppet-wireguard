@@ -12,6 +12,7 @@ define wireguard::provider::systemd (
   Optional[String[1]] $description = undef,
   Optional[Integer[1200, 9000]] $mtu = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
+  Hash $sections = {},
   Array[Stdlib::IP::Address] $default_allowlist = [],
 ) {
   assert_private()
@@ -44,6 +45,7 @@ define wireguard::provider::systemd (
     'interface'       => $interface,
     'addresses'       => $addresses,
     'routes'          => $routes,
+    'sections'        => $sections,
   }
 
   systemd::network { "${interface}.network":

@@ -31,3 +31,11 @@ KeepConfiguration=yes
 <% } -%>
 <% } -%>
 
+<% $sections.each |$section_key, $section_value| { -%>
+<% $section_value.each |$section| { -%>
+[<%= $section_key %>]
+<% $section.each |$key, $value| { -%>
+<%= $key %>=<%= $value %>
+<% } -%>
+<% } -%>
+<% } -%>
