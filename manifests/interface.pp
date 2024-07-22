@@ -18,7 +18,7 @@
 # @param mtu configure the MTU (maximum transision unit) for the wireguard tunnel. By default linux will figure this out. You might need to lower it if you're connection through a DSL line. MTU needs to be equal on both tunnel endpoints
 # @param peers is an array of struct (Wireguard::Peers) for multiple peers
 # @param routes different routes for the systemd-networkd configuration
-# @param sections additional sections for the systemd-networkd configuration
+# @param extra_networkd_sections additional sections for the systemd-networkd configuration
 # @param private_key Define private key which should be used for this interface, if not provided a private key will be generated
 # @param preshared_key Define preshared key for the remote peer
 # @param provider The specific backend to use for this `wireguard::interface` resource
@@ -97,11 +97,11 @@
 #
 # @example Peer with one node, setup dualstack firewall rules and RoutingPolicyRule
 #  wireguard::interface {'as2273':
-#    source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
-#    public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
-#    endpoint         => 'wg.example.com:53668',
-#    addresses        => [{'Address' => '192.168.123.6/30',},{'Address' => 'fe80::beef:1/64'},],
-#    sections         => {
+#    source_addresses        => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
+#    public_key              => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
+#    endpoint                => 'wg.example.com:53668',
+#    addresses               => [{'Address' => '192.168.123.6/30',},{'Address' => 'fe80::beef:1/64'},],
+#    extra_networkd_sections => {
 #      'RoutingPolicyRule' => [
 #        {
 #          'From'              => '10.0.0.0/24',
@@ -130,7 +130,7 @@ define wireguard::interface (
   Optional[Integer[1200, 9000]] $mtu = undef,
   Optional[String[1]] $public_key = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
-  Hash[String, Hash[Any, String]] $sections = {},
+  Hash[String, Hash[String, Any]] $extra_networkd_sections = {},
   Optional[String[1]] $private_key = undef,
   Optional[String[1]] $preshared_key = undef,
   Enum['systemd', 'wgquick'] $provider = 'systemd',
@@ -337,21 +337,21 @@ define wireguard::interface (
       }
 
       wireguard::provider::systemd { $interface :
-        ensure            => $ensure,
-        interface         => $interface,
-        peers             => $peers + $peer,
-        dport             => $dport,
-        firewall_mark     => $firewall_mark,
-        addresses         => $addresses,
-        description       => $description,
-        mtu               => $mtu,
-        routes            => $routes,
-        sections          => $sections,
-        default_allowlist => $wireguard::default_allowlist,
+        ensure                  => $ensure,
+        interface               => $interface,
+        peers                   => $peers + $peer,
+        dport                   => $dport,
+        firewall_mark           => $firewall_mark,
+        addresses               => $addresses,
+        description             => $description,
+        mtu                     => $mtu,
+        routes                  => $routes,
+        extra_networkd_sections => $extra_networkd_sections,
+        default_allowlist       => $wireguard::default_allowlist,
       }
     }
     'wgquick': {
-      if !empty($sections) {
+      if !empty($extra_networkd_sections) {
         warning('Systemd sections are not supported by wgquick')
       }
 
