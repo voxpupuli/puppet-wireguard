@@ -376,12 +376,11 @@ Default value: `[]`
 
 ##### <a name="-wireguard--interface--sections"></a>`sections`
 
-Data type: `Hash`
+Data type: `Hash[String, Hash[Any, String]]`
 
-different sections for the systemd-networkd configuration
+additional sections for the systemd-networkd configuration
 
 Default value: `{}`
-
 
 ##### <a name="-wireguard--interface--private_key"></a>`private_key`
 
