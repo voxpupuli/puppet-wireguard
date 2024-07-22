@@ -191,11 +191,11 @@ wireguard::interface { 'wg0':
 
 ```puppet
 wireguard::interface {'as2273':
-  source_addresses => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
-  public_key       => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
-  endpoint         => 'wg.example.com:53668',
-  addresses        => [{'Address' => '192.168.123.6/30',},{'Address' => 'fe80::beef:1/64'},],
-  sections         => {
+  source_addresses        => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
+  public_key              => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
+  endpoint                => 'wg.example.com:53668',
+  addresses               => [{'Address' => '192.168.123.6/30',},{'Address' => 'fe80::beef:1/64'},],
+  extra_networkd_sections => {
     'RoutingPolicyRule' => [
       {
         'From'              => '10.0.0.0/24',
@@ -228,7 +228,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`mtu`](#-wireguard--interface--mtu)
 * [`peers`](#-wireguard--interface--peers)
 * [`routes`](#-wireguard--interface--routes)
-* [`sections`](#-wireguard--interface--sections)
+* [`extra_networkd_sections`](#-wireguard--interface--extra_networkd_sections)
 * [`private_key`](#-wireguard--interface--private_key)
 * [`preshared_key`](#-wireguard--interface--preshared_key)
 * [`provider`](#-wireguard--interface--provider)
@@ -374,9 +374,9 @@ different routes for the systemd-networkd configuration
 
 Default value: `[]`
 
-##### <a name="-wireguard--interface--sections"></a>`sections`
+##### <a name="-wireguard--interface--extra_networkd_sections"></a>`extra_networkd_sections`
 
-Data type: `Hash[String, Hash[Any, String]]`
+Data type: `Hash[String, Hash[String, Any]]`
 
 additional sections for the systemd-networkd configuration
 
