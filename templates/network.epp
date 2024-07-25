@@ -2,7 +2,7 @@
     Array[Hash] $addresses,
     String[1] $interface,
     Array[Hash[String[1], Variant[String[1], Boolean]]] $routes,
-    Hash[String, Hash[String, Any]] $extra_networkd_sections,
+    Hash[String, Array[Hash[String, Any]]] $extra_networkd_sections,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
 # based on https://dn42.dev/howto/wireguard
