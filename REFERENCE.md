@@ -187,6 +187,26 @@ wireguard::interface { 'wg0':
 }
 ```
 
+##### Peer with one node, setup dualstack firewall rules and RoutingPolicyRule
+
+```puppet
+wireguard::interface {'as2273':
+  source_addresses        => ['2003:4f8:c17:4cf::1', '149.9.255.4'],
+  public_key              => 'BcxLll1BVxGQ5DeijroesjroiesjrjvX+EBhS4vcDn0R0=',
+  endpoint                => 'wg.example.com:53668',
+  addresses               => [{'Address' => '192.168.123.6/30',},{'Address' => 'fe80::beef:1/64'},],
+  extra_networkd_sections => {
+    'RoutingPolicyRule' => [
+      {
+        'From'              => '10.0.0.0/24',
+        'Table'             => '1010',
+        'IncomingInterface' => 'as2273',
+      },
+    ],
+  },
+}
+```
+
 #### Parameters
 
 The following parameters are available in the `wireguard::interface` defined type:
@@ -208,6 +228,7 @@ The following parameters are available in the `wireguard::interface` defined typ
 * [`mtu`](#-wireguard--interface--mtu)
 * [`peers`](#-wireguard--interface--peers)
 * [`routes`](#-wireguard--interface--routes)
+* [`extra_networkd_sections`](#-wireguard--interface--extra_networkd_sections)
 * [`private_key`](#-wireguard--interface--private_key)
 * [`preshared_key`](#-wireguard--interface--preshared_key)
 * [`provider`](#-wireguard--interface--provider)
@@ -352,6 +373,14 @@ Data type: `Array[Hash[String[1], Variant[String[1], Boolean]]]`
 different routes for the systemd-networkd configuration
 
 Default value: `[]`
+
+##### <a name="-wireguard--interface--extra_networkd_sections"></a>`extra_networkd_sections`
+
+Data type: `Hash[String, Array[Hash[String, Any]]]`
+
+additional sections for the systemd-networkd configuration
+
+Default value: `{}`
 
 ##### <a name="-wireguard--interface--private_key"></a>`private_key`
 
