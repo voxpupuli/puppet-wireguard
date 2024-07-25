@@ -376,7 +376,7 @@ Default value: `[]`
 
 ##### <a name="-wireguard--interface--extra_networkd_sections"></a>`extra_networkd_sections`
 
-Data type: `Hash[String, Hash[String, Any]]`
+Data type: `Hash[String, Array[Hash[String, Any]]]`
 
 additional sections for the systemd-networkd configuration
 

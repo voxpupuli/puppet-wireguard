@@ -130,7 +130,7 @@ define wireguard::interface (
   Optional[Integer[1200, 9000]] $mtu = undef,
   Optional[String[1]] $public_key = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
-  Hash[String, Hash[String, Any]] $extra_networkd_sections = {},
+  Hash[String, Array[Hash[String, Any]]] $extra_networkd_sections = {},
   Optional[String[1]] $private_key = undef,
   Optional[String[1]] $preshared_key = undef,
   Enum['systemd', 'wgquick'] $provider = 'systemd',
