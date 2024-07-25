@@ -276,7 +276,7 @@ describe 'wireguard::interface', type: :define do
             destination_addresses: [facts[:networking]['ip'],],
             addresses: [{ 'Address' => '192.0.2.1/24' }],
             routes: [{ 'Gateway' => '192.0.2.2', 'GatewayOnLink' => true, 'Destination' => '192.0.3.0/24' }],
-            extra_networkd_sections: [{ 'RoutingPolicyRule' => [{ 'From' => '10.0.0.0/24', 'Table' => '1010', 'IncomingInterface' => 'as1234' }] }],
+            extra_networkd_sections: { 'RoutingPolicyRule' => [{ 'From' => '10.0.0.0/24', 'Table' => '1010', 'IncomingInterface' => 'as1234' }] },
           }
         end
 
