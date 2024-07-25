@@ -255,7 +255,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.not_to compile.with_all_deps }
       end
 
-      context 'with required params (peers), routes and without firewall rules' do
+      context 'with required params (peers), routes, extra network sections and without firewall rules' do
         let :params do
           {
             peers: [
@@ -276,6 +276,7 @@ describe 'wireguard::interface', type: :define do
             destination_addresses: [facts[:networking]['ip'],],
             addresses: [{ 'Address' => '192.0.2.1/24' }],
             routes: [{ 'Gateway' => '192.0.2.2', 'GatewayOnLink' => true, 'Destination' => '192.0.3.0/24' }],
+            extra_networkd_sections: [{ 'RoutingPolicyRule' => [{ 'From' => '10.0.0.0/24', 'Table' => '1010', 'IncomingInterface' => 'as1234' }]}],
           }
         end
 
