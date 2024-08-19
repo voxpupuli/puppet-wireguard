@@ -2,6 +2,7 @@
     Array[Hash] $addresses,
     String[1] $interface,
     Array[Hash[String[1], Variant[String[1], Boolean]]] $routes,
+    Hash[String, Array[Hash[String, Any]]] $extra_networkd_sections,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
 # based on https://dn42.dev/howto/wireguard
@@ -31,3 +32,12 @@ KeepConfiguration=yes
 <% } -%>
 <% } -%>
 
+<% $extra_networkd_sections.each |$section_key, $section_value| { -%>
+<% $section_value.each |$section| { -%>
+[<%= $section_key %>]
+<% $section.each |$key, $value| { -%>
+<%= $key %>=<%= $value %>
+<% } -%>
+<% } -%>
+
+<% } -%>
