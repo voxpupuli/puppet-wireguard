@@ -38,7 +38,7 @@ define wireguard::provider::systemd (
     owner           => 'root',
     group           => 'systemd-network',
     mode            => '0440',
-    require         => File["${config_directory}/${interface}"],
+    require         => File["${wireguard::config_directory}/${interface}"],
   }
 
   $network_epp_params = {
