@@ -31,9 +31,6 @@ FirewallMark=<%= $firewall_mark %>
 <% $peers.each |$peer| { -%>
 
 [WireGuardPeer]
-<% if $peer['description'] { -%>
-Description=<%= $peer['description'] %>
-<% } -%>
 PublicKey=<%= $peer['public_key'] %>
 <% if $peer['preshared_key'] { -%>
 PresharedKey=<%= $peer['preshared_key'] %>
