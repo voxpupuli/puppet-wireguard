@@ -459,12 +459,12 @@ Alias of
 
 ```puppet
 Array[Struct[{
-      public_key           => String[1],
-      preshared_key        => Optional[String[1]],
-      allowed_ips          => Optional[Array[String[1]]],
-      endpoint             => Optional[String[1]],
-      persistent_keepalive => Optional[Stdlib::Port],
-      description          => Optional[String[1]],
+    public_key           => String[1],
+    preshared_key        => Optional[String[1]],
+    allowed_ips          => Optional[Array[String[1]]],
+    endpoint             => Optional[String[1]],
+    persistent_keepalive => Optional[Stdlib::Port],
+    description          => Optional[String[1]],
   }]]
 ```
 
