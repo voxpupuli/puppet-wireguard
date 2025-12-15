@@ -309,10 +309,10 @@ define wireguard::interface (
 
   if $public_key {
     $peer = [{
-        public_key           => $public_key,
-        endpoint             => $endpoint,
-        preshared_key        => $preshared_key,
-        persistent_keepalive => $persistent_keepalive,
+      public_key           => $public_key,
+      endpoint             => $endpoint,
+      preshared_key        => $preshared_key,
+      persistent_keepalive => $persistent_keepalive,
     }]
   } else {
     $peer = []
