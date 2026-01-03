@@ -46,10 +46,10 @@ MTU=<%= $mtu %>
 
 <% $peers.each |$peer| { -%>
 
-<% if $peer['description'] { -%>
-# <%= $peer['description'] %>
-<% } -%>
 [Peer]
+<% if $peer['description'] { -%>
+# friendly_name = <%= $peer['description'] %>
+<% } -%>
 PublicKey=<%= $peer['public_key'] %>
 <% if $peer['endpoint'] { -%>
 Endpoint=<%= $peer['endpoint'] %>

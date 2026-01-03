@@ -17,7 +17,7 @@ AllowedIPs=fd00::/8
 AllowedIPs=0.0.0.0/0
 
 [WireGuardPeer]
-Description=foo
+# friendly_name = foo
 PublicKey=foo==
 PresharedKey=bar=
 PersistentKeepalive=0
