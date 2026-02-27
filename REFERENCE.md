@@ -21,6 +21,7 @@
 
 ### Data types
 
+* [`Wireguard::Addresses`](#Wireguard--Addresses): custom data type for addresses
 * [`Wireguard::Peers`](#Wireguard--Peers): custom data type for an array with wireguard peers
 
 ## Classes
@@ -328,7 +329,7 @@ Default value: `undef`
 
 ##### <a name="-wireguard--interface--addresses"></a>`addresses`
 
-Data type: `Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]]`
+Data type: `Wireguard::Addresses`
 
 different addresses for the systemd-networkd configuration
 
@@ -447,6 +448,24 @@ optional outgoing port from the other endpoint. Will be used for firewalling. If
 Default value: `undef`
 
 ## Data types
+
+### <a name="Wireguard--Addresses"></a>`Wireguard::Addresses`
+
+This data type is allowed for all interface provider.
+For settings not available in all providers, use the
+the specific datatype.
+Settings added here, needs also be setup in
+Wireguard::Addresses::*.
+
+Alias of
+
+```puppet
+Array[Struct[{
+    'Address' => Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6],
+    'Peer' => Optional[Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]],
+    'DNS' => Optional[Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]],
+  }]]
+```
 
 ### <a name="Wireguard--Peers"></a>`Wireguard::Peers`
 
