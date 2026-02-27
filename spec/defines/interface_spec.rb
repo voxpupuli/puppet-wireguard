@@ -500,7 +500,7 @@ describe 'wireguard::interface', type: :define do
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
             destination_addresses: [facts[:networking]['ip'],],
-            addresses: [{ 'Address' => '192.0.2.1/24' }],
+            addresses: [{ 'Address' => '192.0.2.1/24', 'RouteMetric' => 100 }],
           }
         end
         let :expected_netdev_content_allow do

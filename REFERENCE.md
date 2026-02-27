@@ -21,7 +21,8 @@
 
 ### Data types
 
-* [`Wireguard::Addresses`](#Wireguard--Addresses): custom data type for addresses
+* [`Wireguard::Addresses::Systemd`](#Wireguard--Addresses--Systemd): custom data type for addresses used for the systemd provider
+* [`Wireguard::Addresses::Wgquick`](#Wireguard--Addresses--Wgquick): custom data type for addresses used for wgquick provider
 * [`Wireguard::Peers`](#Wireguard--Peers): custom data type for an array with wireguard peers
 
 ## Classes
@@ -329,7 +330,7 @@ Default value: `undef`
 
 ##### <a name="-wireguard--interface--addresses"></a>`addresses`
 
-Data type: `Wireguard::Addresses`
+Data type: `Variant[Wireguard::Addresses::Wgquick,Wireguard::Addresses::Systemd]`
 
 different addresses for the systemd-networkd configuration
 
@@ -449,13 +450,25 @@ Default value: `undef`
 
 ## Data types
 
-### <a name="Wireguard--Addresses"></a>`Wireguard::Addresses`
+### <a name="Wireguard--Addresses--Systemd"></a>`Wireguard::Addresses::Systemd`
 
-This data type is allowed for all interface provider.
-For settings not available in all providers, use the
-the specific datatype.
-Settings added here, needs also be setup in
-Wireguard::Addresses::*.
+custom data type for addresses used for the systemd provider
+
+Alias of
+
+```puppet
+Array[Struct[{
+    'Address' => Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6],
+    'Peer' => Optional[Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]],
+    'DNS' => Optional[Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]],
+    # systemd specific values
+    'RouteMetric' => Optional[Integer[0,4294967295]],
+  }]]
+```
+
+### <a name="Wireguard--Addresses--Wgquick"></a>`Wireguard::Addresses::Wgquick`
+
+custom data type for addresses used for wgquick provider
 
 Alias of
 
