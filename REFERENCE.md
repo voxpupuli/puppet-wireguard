@@ -35,6 +35,7 @@ manages the wireguard package
 
 The following parameters are available in the `wireguard` class:
 
+* [`config_directory_group`](#-wireguard--config_directory_group)
 * [`manage_package`](#-wireguard--manage_package)
 * [`package_name`](#-wireguard--package_name)
 * [`package_ensure`](#-wireguard--package_ensure)
@@ -42,6 +43,12 @@ The following parameters are available in the `wireguard` class:
 * [`purge_unknown_keys`](#-wireguard--purge_unknown_keys)
 * [`interfaces`](#-wireguard--interfaces)
 * [`default_allowlist`](#-wireguard--default_allowlist)
+
+##### <a name="-wireguard--config_directory_group"></a>`config_directory_group`
+
+Data type: `String`
+
+specify the group on `$config_directory`
 
 ##### <a name="-wireguard--manage_package"></a>`manage_package`
 

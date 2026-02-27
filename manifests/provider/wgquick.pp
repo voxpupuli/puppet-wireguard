@@ -32,10 +32,11 @@ define wireguard::provider::wgquick (
     'default_allowlist' => $default_allowlist,
   }
 
-  file { "/etc/wireguard/${interface}.conf":
+  file { "${wireguard::config_directory}/${interface}.conf":
     ensure  => $ensure,
     content => epp("${module_name}/wireguard_conf.epp", $params),
     owner   => 'root',
-    mode    => '0600',
+    group   => $wireguard::config_directory_group,
+    mode    => '0640',
   }
 }
