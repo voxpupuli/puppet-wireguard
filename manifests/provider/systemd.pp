@@ -8,7 +8,7 @@ define wireguard::provider::systemd (
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
   Optional[String[1]] $table = undef,
   Optional[Integer[0,4294967295]] $firewall_mark = undef,
-  Array[Hash[String,Variant[Stdlib::IP::Address::V4,Stdlib::IP::Address::V6]]] $addresses = [],
+  Wireguard::Addresses $addresses = [],
   Optional[String[1]] $description = undef,
   Optional[Integer[1200, 9000]] $mtu = undef,
   Array[Hash[String[1], Variant[String[1], Boolean]]] $routes = [],
