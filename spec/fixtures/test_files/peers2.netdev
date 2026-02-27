@@ -15,7 +15,7 @@ PersistentKeepalive=0
 AllowedIPs=127.0.0.1/32
 
 [WireGuardPeer]
-Description=foo
+# friendly_name = foo
 PublicKey=foo==
 PresharedKey=bar=
 PersistentKeepalive=0

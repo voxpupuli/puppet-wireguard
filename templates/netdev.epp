@@ -13,7 +13,7 @@
 Name=<%= $interface %>
 Kind=wireguard
 <% if $description { -%>
-Description=<%= $description %>
+# friendly_name = <%= $description %>
 <% } -%>
 <% if $mtu { -%>
 MTUBytes=<%= $mtu %>
@@ -32,7 +32,7 @@ FirewallMark=<%= $firewall_mark %>
 
 [WireGuardPeer]
 <% if $peer['description'] { -%>
-Description=<%= $peer['description'] %>
+# friendly_name = <%= $peer['description'] %>
 <% } -%>
 PublicKey=<%= $peer['public_key'] %>
 <% if $peer['preshared_key'] { -%>

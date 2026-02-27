@@ -48,7 +48,7 @@ describe 'wireguard::interface', type: :define do
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{Endpoint=#{params[:endpoint]}}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{PersistentKeepalive=0}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Address}) }
-        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{Description}) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{# friendly_name}) }
         it { is_expected.to contain_file("/etc/systemd/network/#{title}.network").without_content(%r{MTUBytes}) }
         it { is_expected.to have_nftables__simplerule_resource_count(0) }
       end
@@ -203,7 +203,7 @@ describe 'wireguard::interface', type: :define do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{Description=bla}) }
+        it { is_expected.to contain_file("/etc/systemd/network/#{title}.netdev").with_content(%r{# friendly_name = bla}) }
       end
 
       context 'with MTU' do
