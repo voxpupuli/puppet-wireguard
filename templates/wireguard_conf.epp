@@ -4,7 +4,7 @@
     Optional[String[1]] $table,
     Optional[Integer] $firewall_mark,
     Wireguard::Peers $peers,
-    Wireguard::Addresses $addresses,
+    Wireguard::Addresses::Wgquick $addresses,
     Array[String[1]] $preup_cmds,
     Array[String[1]] $postup_cmds,
     Array[String[1]] $predown_cmds,

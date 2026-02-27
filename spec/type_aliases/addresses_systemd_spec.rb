@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe 'Wireguard::Addresses' do
+describe 'Wireguard::Addresses::Systemd' do
   describe 'valid types' do
     context 'with valid types' do
       [
