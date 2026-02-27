@@ -1,5 +1,5 @@
 <%- |
-    Wireguard::Addresses $addresses,
+    Wireguard::Addresses::Systemd $addresses,
     String[1] $interface,
     Array[Hash[String[1], Variant[String[1], Boolean]]] $routes,
     Hash[String, Array[Hash[String, Any]]] $extra_networkd_sections,

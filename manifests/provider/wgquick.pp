@@ -8,7 +8,7 @@ define wireguard::provider::wgquick (
   Integer[1024, 65000] $dport = Integer(regsubst($title, '^\D+(\d+)$', '\1')),
   Optional[String[1]] $table = undef,
   Optional[Integer[0,4294967295]] $firewall_mark = undef,
-  Wireguard::Addresses $addresses = [],
+  Wireguard::Addresses::Wgquick $addresses = [],
   Array[String[1]] $preup_cmds = [],
   Array[String[1]] $postup_cmds = [],
   Array[String[1]] $predown_cmds = [],

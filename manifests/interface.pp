@@ -125,7 +125,7 @@ define wireguard::interface (
   String[1] $input_interface = $facts['networking']['primary'],
   Boolean $manage_firewall = $facts['os']['family'] ? { 'Gentoo' => false, default => true },
   Array[Stdlib::IP::Address] $source_addresses = [],
-  Wireguard::Addresses $addresses = [],
+  Variant[Wireguard::Addresses::Wgquick,Wireguard::Addresses::Systemd] $addresses = [],
   Optional[String[1]] $description = undef,
   Optional[Integer[1200, 9000]] $mtu = undef,
   Optional[String[1]] $public_key = undef,
