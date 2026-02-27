@@ -13,9 +13,9 @@
     Optional[Integer[1280, 9000]] $mtu = undef,
 | -%>
 # THIS FILE IS MANAGED BY PUPPET
-<% $addresses.each |$address| { -%>
 
 [Interface]
+<% $addresses.each |$address| { -%>
 <% $address.each |$key, $value| { -%>
 <%= $key %>=<%= $value %>
 <% } -%>
