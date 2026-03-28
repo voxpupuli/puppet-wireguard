@@ -14,7 +14,7 @@ describe 'wireguard::interface', type: :define do
       context 'with only default values and manage_firewall=false it wont work' do
         let :params do
           {
-            manage_firewall: false
+            manage_firewall: false,
           }
         end
 
@@ -30,7 +30,7 @@ describe 'wireguard::interface', type: :define do
             manage_firewall: false,
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
           }
         end
 
@@ -80,12 +80,12 @@ describe 'wireguard::interface', type: :define do
                 preshared_key: 'bar=',
                 description: 'foo',
                 allowed_ips: ['192.0.2.3'],
-              }
+              },
             ],
             manage_firewall: false,
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
             addresses: [{ 'Address' => '192.0.2.1/24' }],
           }
         end
@@ -123,7 +123,7 @@ describe 'wireguard::interface', type: :define do
             endpoint: 'wireguard.example.com:1234',
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
             source_addresses: ['127.0.0.1'],
           }
         end
@@ -152,8 +152,8 @@ describe 'wireguard::interface', type: :define do
             manage_firewall: false,
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
-            addresses: [{ 'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32' }, { 'Address' => 'fe80::ade1/64', },],
+            destination_addresses: [facts[:networking]['ip']],
+            addresses: [{ 'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32' }, { 'Address' => 'fe80::ade1/64' }],
           }
         end
 
@@ -198,7 +198,7 @@ describe 'wireguard::interface', type: :define do
             description: 'bla',
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
           }
         end
 
@@ -215,7 +215,7 @@ describe 'wireguard::interface', type: :define do
             mtu: 9000,
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
           }
         end
 
@@ -232,7 +232,7 @@ describe 'wireguard::interface', type: :define do
             mtu: 9001,
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
           }
         end
 
@@ -248,7 +248,7 @@ describe 'wireguard::interface', type: :define do
             mtu: '9000',
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
           }
         end
 
@@ -268,12 +268,12 @@ describe 'wireguard::interface', type: :define do
                 preshared_key: 'bar=',
                 description: 'foo',
                 allowed_ips: ['192.0.2.3'],
-              }
+              },
             ],
             manage_firewall: false,
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
             addresses: [{ 'Address' => '192.0.2.1/24' }],
             routes: [{ 'Gateway' => '192.0.2.2', 'GatewayOnLink' => true, 'Destination' => '192.0.3.0/24' }],
             extra_networkd_sections: { 'RoutingPolicyRule' => [{ 'From' => '10.0.0.0/24', 'Table' => '1010', 'IncomingInterface' => 'as1234' }] },
@@ -309,8 +309,8 @@ describe 'wireguard::interface', type: :define do
             manage_firewall: false,
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
-            addresses: [{ 'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32' }, { 'Address' => 'fe80::ade1/64', },],
+            destination_addresses: [facts[:networking]['ip']],
+            addresses: [{ 'Address' => '192.168.218.87/32', 'Peer' => '172.20.53.97/32' }, { 'Address' => 'fe80::ade1/64' }],
           }
         end
 
@@ -336,7 +336,7 @@ describe 'wireguard::interface', type: :define do
             manage_firewall: false,
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
             provider: 'wgquick',
           }
         end
@@ -359,8 +359,8 @@ describe 'wireguard::interface', type: :define do
             manage_firewall: false,
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
-            addresses: [{ 'Address' => '192.168.218.87/32', 'DNS' => '192.168.218.1', 'Peer' => '172.20.53.97/32' }, { 'Address' => 'fe80::ade1/64', },],
+            destination_addresses: [facts[:networking]['ip']],
+            addresses: [{ 'Address' => '192.168.218.87/32', 'DNS' => '192.168.218.1', 'Peer' => '172.20.53.97/32' }, { 'Address' => 'fe80::ade1/64' }],
           }
         end
 
@@ -385,7 +385,7 @@ describe 'wireguard::interface', type: :define do
             public_key: 'blabla==',
             endpoint: 'wireguard.example.com:1234',
             manage_firewall: false,
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
             provider: 'wgquick',
             addresses: [{ 'Address' => '192.168.218.87/32', 'DNS' => '192.168.218.1' }],
           }
@@ -409,7 +409,7 @@ describe 'wireguard::interface', type: :define do
             public_key: 'blabla==',
             endpoint: 'wireguard.example.com:1234',
             manage_firewall: false,
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
             provider: 'wgquick',
             addresses: [{ 'Address' => '192.168.218.87/32' }],
             postup_cmds: [
@@ -440,7 +440,7 @@ describe 'wireguard::interface', type: :define do
             public_key: 'blabla==',
             endpoint: 'wireguard.example.com:1234',
             manage_firewall: false,
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
             provider: 'wgquick',
             addresses: [{ 'Address' => '192.168.218.87/32' }],
             mtu: 1280,
@@ -469,7 +469,7 @@ describe 'wireguard::interface', type: :define do
             description: 'bla',
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
           }
         end
 
@@ -494,12 +494,12 @@ describe 'wireguard::interface', type: :define do
                 preshared_key: 'bar=',
                 description: 'foo',
                 allowed_ips: ['192.0.2.3'],
-              }
+              },
             ],
             manage_firewall: false,
             # we need to set destination_addresses to overwrite the default
             # that would configure IPv4+IPv6, but GHA doesn't provide IPv6 for us
-            destination_addresses: [facts[:networking]['ip'],],
+            destination_addresses: [facts[:networking]['ip']],
             addresses: [{ 'Address' => '192.0.2.1/24', 'RouteMetric' => 100 }],
           }
         end
