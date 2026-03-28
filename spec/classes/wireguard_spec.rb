@@ -26,10 +26,10 @@ describe 'wireguard' do
               'wg0' => {
                 'private_key' => 'gFYpkdIuGG3EhXKdGmuMJs/3rp/88wkFv2Go+shtu08=',
                 'manage_firewall' => false,
-                'destination_addresses' => [facts[:networking]['ip'],],
+                'destination_addresses' => [facts[:networking]['ip']],
                 'dport' => 51_820,
                 'addresses' => [{ 'Address' => '192.168.218.87/24' }],
-                'peers' => [{ 'public_key' => '4X0AW5W+oZQ1uP44Y2W1rv4REKjfvUt1D25weWyqryQ=', 'allowed_ips' => ['192.168.218.89/32'] }]
+                'peers' => [{ 'public_key' => '4X0AW5W+oZQ1uP44Y2W1rv4REKjfvUt1D25weWyqryQ=', 'allowed_ips' => ['192.168.218.89/32'] }],
               },
             },
           }
