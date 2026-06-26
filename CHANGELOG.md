@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v5.0.0](https://github.com/voxpupuli/puppet-wireguard/tree/v5.0.0) (2026-06-26)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v4.1.0...v5.0.0)
+
+**Breaking changes:**
+
+- Drop puppet, update openvox minimum version to 8.19 [\#136](https://github.com/voxpupuli/puppet-wireguard/pull/136) ([TheMeier](https://github.com/TheMeier))
+
+**Implemented enhancements:**
+
+- add RouteMetric for systemd provider [\#144](https://github.com/voxpupuli/puppet-wireguard/pull/144) ([trefzer](https://github.com/trefzer))
+- use a stricter datatype for addresses specification [\#143](https://github.com/voxpupuli/puppet-wireguard/pull/143) ([trefzer](https://github.com/trefzer))
+- metadata.json: Add OpenVox [\#130](https://github.com/voxpupuli/puppet-wireguard/pull/130) ([jstraw](https://github.com/jstraw))
+- Add custom sections to systemd network [\#117](https://github.com/voxpupuli/puppet-wireguard/pull/117) ([sallchr](https://github.com/sallchr))
+
+**Fixed bugs:**
+
+- Remove Description from NetDev and add friendly\_name [\#142](https://github.com/voxpupuli/puppet-wireguard/pull/142) ([qdii](https://github.com/qdii))
+- fix: Move addresses inside \[Interface\] section of wg-quick template [\#135](https://github.com/voxpupuli/puppet-wireguard/pull/135) ([amuckart](https://github.com/amuckart))
+
+**Merged pull requests:**
+
+- puppet/systemd: allow 8.x [\#122](https://github.com/voxpupuli/puppet-wireguard/pull/122) ([jay7x](https://github.com/jay7x))
+- update puppet-systemd upper bound to 8.0.0 [\#113](https://github.com/voxpupuli/puppet-wireguard/pull/113) ([TheMeier](https://github.com/TheMeier))
+
 ## [v4.1.0](https://github.com/voxpupuli/puppet-wireguard/tree/v4.1.0) (2024-03-24)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-wireguard/compare/v4.0.1...v4.1.0)
