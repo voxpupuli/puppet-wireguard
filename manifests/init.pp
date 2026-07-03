@@ -1,6 +1,7 @@
 #
 # @summary manages the wireguard package
 #
+# @param config_directory_group specify the group on `$config_directory`
 # @param manage_package if the package should be managed or not
 # @param package_name the name of the package
 # @param package_ensure the ensure state of the package
@@ -12,6 +13,7 @@
 # @author Tim Meusel <tim@bastelfreak.de>
 #
 class wireguard (
+  String $config_directory_group,
   Boolean $manage_package = true,
   String[1] $package_name = 'wireguard-tools',
   Enum['installed', 'latest', 'absent'] $package_ensure = 'installed',
@@ -40,7 +42,7 @@ class wireguard (
     ensure => $_file_ensure,
     owner  => 'root',
     mode   => '0750',
-    group  => 'systemd-network',
+    group  => $config_directory_group,
     *      => $options,
   }
 
