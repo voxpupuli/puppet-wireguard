@@ -42,7 +42,15 @@
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
         "11",
-        "12"
+        "12",
+        "13"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "9",
+        "10"
       ]
     }
   ],

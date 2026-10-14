@@ -270,7 +270,7 @@ define wireguard::interface (
       ensure  => 'file',
       content => $private_key,
       owner   => 'root',
-      group   => 'systemd-network',
+      group   => $wireguard::config_directory_group,
       mode    => '0640',
       notify  => Exec["generate public key ${interface}"],
     }
@@ -287,7 +287,7 @@ define wireguard::interface (
     file { $private_key_path:
       ensure => 'file',
       owner  => 'root',
-      group  => 'systemd-network',
+      group  => $wireguard::config_directory_group,
       mode   => '0640',
     }
   }
@@ -303,7 +303,7 @@ define wireguard::interface (
     ensure  => 'file',
     owner   => 'root',
     group   => 'root',
-    mode    => '0600',
+    mode    => '0644',
     require => Exec["generate public key ${interface}"],
   }
 
